@@ -1,44 +1,44 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import Link from 'next/link'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import Link from "next/link";
 
 export default function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [view, setView] = useState('sign-in')
-  const router = useRouter()
-  const supabase = createClientComponentClient()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [view, setView] = useState("sign-in");
+  const router = useRouter();
+  const supabase = createClientComponentClient();
 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     await supabase.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: `${location.origin}/auth/callback`,
       },
-    })
-    setView('check-email')
-  }
+    });
+    setView("check-email");
+  };
 
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     await supabase.auth.signInWithPassword({
       email,
       password,
-    })
-    router.push('/')
-    router.refresh()
-  }
+    });
+    router.push("/");
+    router.refresh();
+  };
 
   return (
-    <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
+    <div className="flex flex-col justify-center flex-1 w-full gap-2 px-8 sm:max-w-md">
       <Link
         href="/"
-        className="absolute left-8 top-8 py-2 px-4 rounded-md no-underline text-foreground bg-btn-background hover:bg-btn-background-hover flex items-center group text-sm"
+        className="absolute flex items-center px-4 py-2 text-sm no-underline rounded-md left-8 top-8 text-foreground bg-btn-background hover:bg-btn-background-hover group"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -50,27 +50,27 @@ export default function Login() {
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1"
+          className="w-4 h-4 mr-2 transition-transform group-hover:-translate-x-1"
         >
           <polyline points="15 18 9 12 15 6" />
-        </svg>{' '}
+        </svg>{" "}
         Back
       </Link>
-      {view === 'check-email' ? (
+      {view === "check-email" ? (
         <p className="text-center text-foreground">
           Check <span className="font-bold">{email}</span> to continue signing
           up
         </p>
       ) : (
         <form
-          className="flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
-          onSubmit={view === 'sign-in' ? handleSignIn : handleSignUp}
+          className="flex flex-col justify-center flex-1 w-full gap-2 text-foreground"
+          onSubmit={view === "sign-in" ? handleSignIn : handleSignUp}
         >
           <label className="text-md" htmlFor="email">
             Email
           </label>
           <input
-            className="rounded-md px-4 py-2 bg-inherit border mb-6"
+            className="px-4 py-2 mb-6 border rounded-md bg-inherit"
             name="email"
             onChange={(e) => setEmail(e.target.value)}
             value={email}
@@ -80,39 +80,39 @@ export default function Login() {
             Password
           </label>
           <input
-            className="rounded-md px-4 py-2 bg-inherit border mb-6"
+            className="px-4 py-2 mb-6 border rounded-md bg-inherit"
             type="password"
             name="password"
             onChange={(e) => setPassword(e.target.value)}
             value={password}
             placeholder="••••••••"
           />
-          {view === 'sign-in' && (
+          {view === "sign-in" && (
             <>
-              <button className="bg-green-700 rounded px-4 py-2 text-white mb-6">
+              <button className="px-4 py-2 mb-6 text-white bg-green-700 rounded">
                 Sign In
               </button>
               <p className="text-sm text-center">
                 Don't have an account?
                 <button
                   className="ml-1 underline"
-                  onClick={() => setView('sign-up')}
+                  onClick={() => setView("sign-up")}
                 >
                   Sign Up Now
                 </button>
               </p>
             </>
           )}
-          {view === 'sign-up' && (
+          {view === "sign-up" && (
             <>
-              <button className="bg-green-700 rounded px-4 py-2 text-white mb-6">
+              <button className="px-4 py-2 mb-6 text-white bg-green-700 rounded">
                 Sign Up
               </button>
               <p className="text-sm text-center">
                 Already have an account?
                 <button
                   className="ml-1 underline"
-                  onClick={() => setView('sign-in')}
+                  onClick={() => setView("sign-in")}
                 >
                   Sign In Now
                 </button>
@@ -122,5 +122,5 @@ export default function Login() {
         </form>
       )}
     </div>
-  )
+  );
 }
