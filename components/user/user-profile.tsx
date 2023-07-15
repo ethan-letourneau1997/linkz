@@ -109,7 +109,10 @@ export default async function UserProfile() {
         {userPosts?.map((post) => (
           <div key={post.id}>
             <h4 className="mt-3 mb-3 font-bold">
-              <Link className="underline" href={`${post.id}`}>
+              <Link
+                className="underline"
+                href={`/community/${post.posted_in}/post/${post.id}`}
+              >
                 {post.post_title}
               </Link>
             </h4>

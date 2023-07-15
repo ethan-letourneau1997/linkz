@@ -45,8 +45,6 @@ export function TextEditor({ updateHTML, content }: TextEditorProps) {
 
   return (
     <div className="mt-5 ">
-      <p className="mb-2">Content</p>
-
       <RichTextEditor editor={editor}>
         <RichTextEditor.Toolbar sticky stickyOffset={60}>
           <RichTextEditor.ControlsGroup>

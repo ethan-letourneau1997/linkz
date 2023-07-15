@@ -1,6 +1,8 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { EditPost } from "./edit-post";
+import { PostVotes } from "./post-votes";
+import { CommentTree } from "../comments/comment-tree";
 
 interface PostDetailsProps {
   postId: number;
@@ -25,18 +27,20 @@ export default async function PostDetails({ postId }: PostDetailsProps) {
   }
 
   return (
-    <div>
-      <h1 className="text-xl">{focusPost.post_title}</h1>
+    <div className="container ">
+      <div className="max-w-4xl mx-auto ">
+        {user && user.id === focusPost.posted_by && (
+          <>
+            <div className="my-5 ">
+              <EditPost post={focusPost} />
+            </div>
+            <PostVotes postId={focusPost.id} userId={user.id} />
+          </>
+        )}
 
-      <div
-        className="mt-5 appearance-none rich-text"
-        dangerouslySetInnerHTML={{ __html: focusPost.post_content }}
-      />
-      {user && user.id === focusPost.posted_by && (
-        <div className="my-5">
-          <EditPost post={focusPost} />
-        </div>
-      )}
+        <div className="mt-10"></div>
+        {user && <CommentTree postId={postId} userId={user.id} />}
+      </div>
     </div>
   );
 }

@@ -57,14 +57,19 @@ export default async function Community({ communityName }: CommunityProps) {
 
           {communityPosts?.map((post) => (
             <div key={post.id} className="p-2 mt-2 border">
-              <h4 className="mb-3 text-lg font-bold ">
-                <Link
-                  className="underline"
-                  href={`${communityName}/post/${post.id}`}
-                >
-                  {post.post_title}
-                </Link>
-              </h4>
+              <div className="flex">
+                <h2 className="mb-3 text-lg font-bold ">
+                  <Link
+                    className="underline"
+                    href={`${communityName}/post/${post.id}`}
+                  >
+                    {post.post_title}
+                  </Link>
+                  <span className="text-base font-light">
+                    &nbsp;&nbsp;votes: {post.vote_count}
+                  </span>
+                </h2>
+              </div>
               <div dangerouslySetInnerHTML={{ __html: post.post_content }} />
               <div className="italic font-light ">
                 -{post.posted_by.user_name}

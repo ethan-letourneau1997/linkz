@@ -26,7 +26,7 @@ export default async function Index() {
   }
 
   return (
-    <div className="flex flex-col items-center w-full">
+    <div className="flex flex-col items-center w-full ">
       {user ? (
         <div className="flex items-center gap-4 text-3xl">
           Hello, {userName}!

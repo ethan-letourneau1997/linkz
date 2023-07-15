@@ -1,7 +1,7 @@
 "use client";
 
 import { SetStateAction, useState } from "react";
-import { TextEditor } from "../Editor/text-editor";
+import { TextEditor } from "../editor/text-editor";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 interface CreatePostProps {

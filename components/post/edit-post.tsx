@@ -3,7 +3,8 @@
 import { useState } from "react";
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { TextEditor } from "../Editor/text-editor";
+import { TextEditor } from "../editor/text-editor";
+import { DeletePost } from "./delete-post";
 
 interface EditPostProps {
   post: {
@@ -49,17 +50,10 @@ export function EditPost({ post }: EditPostProps) {
 
   return (
     <div>
-      <p>{editMode ? "goodbye" : "hello"} edit.</p>
-
-      {/* <button
-        className="px-3 py-1 mt-6 border hover:bg-white hover:text-black"
-        onClick={handleToggleEdit}
-      >
-        {editMode ? "save" : "edit"}
-      </button> */}
-
+      <h1 className="text-2xl font-semibold text-centerx">{post.post_title}</h1>
       {editMode ? (
         <>
+          <TextEditor content={postContent} updateHTML={updatePostContent} />
           <button
             className="px-3 py-1 mt-6 border hover:bg-white hover:text-black"
             onClick={handlePostSave}
@@ -72,17 +66,21 @@ export function EditPost({ post }: EditPostProps) {
           >
             cancel
           </button>
+          <DeletePost post={post} />
         </>
       ) : (
-        <button
-          className="px-3 py-1 mt-6 border hover:bg-white hover:text-black"
-          onClick={handlePostEdit}
-        >
-          edit
-        </button>
-      )}
-      {editMode && (
-        <TextEditor content={postContent} updateHTML={updatePostContent} />
+        <>
+          <div
+            className="mt-5 appearance-none rich-text"
+            dangerouslySetInnerHTML={{ __html: post.post_content }}
+          />
+          <button
+            className="px-3 py-1 mt-6 border hover:bg-white hover:text-black"
+            onClick={handlePostEdit}
+          >
+            edit
+          </button>
+        </>
       )}
     </div>
   );

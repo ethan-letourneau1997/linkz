@@ -23,7 +23,7 @@ export default async function RootLayout({
   } = await supabase.auth.getUser();
 
   return (
-    <html lang="en">
+    <html lang="en" className="bg-gray-600">
       <body className="min-h-screen text-white bg-background">
         <nav className="flex justify-between px-10 py-4 text-white border-b w-fullgap-5 border-b-foreground/10">
           <div className="flex gap-6 my-auto">
