@@ -6,16 +6,16 @@ import { TextEditor } from "../editor/text-editor";
 
 interface CommentReplyProps {
   userId: string;
-  parentId: number;
+  parentId: number | null;
   rootPostId: number;
-  incrementRefresh: any;
+  refresh: any;
 }
 
 export function CommentReply({
   userId,
   parentId,
   rootPostId,
-  incrementRefresh,
+  refresh,
 }: CommentReplyProps) {
   const supabase = createClientComponentClient(); // Create a Supabase client configured to use cookies
 
@@ -32,8 +32,6 @@ export function CommentReply({
     setReplyContent(newValue);
   };
 
-  console.log(replyContent);
-
   async function handlePostReply() {
     const { data, error } = await supabase
       .from("comment")
@@ -47,8 +45,7 @@ export function CommentReply({
       ])
       .select();
 
-    if (error) console.log(error);
-    incrementRefresh();
+    refresh();
     setShowInput(false);
   }
 

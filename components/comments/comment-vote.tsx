@@ -57,14 +57,24 @@ export function CommentVotes({ commentId, userId }: CommentVotesProps) {
   }, [update]);
 
   function handleUpvote() {
+    // temp set before validation
+    setCurrentUserVote(1);
+    // temp set before validation
+    setTotalCommentVotes(totalCommentVotes + 1);
     handleUpdateVote(1);
   }
 
   function handleDownvote() {
+    // temp set before validation
+    setTotalCommentVotes(totalCommentVotes - 1);
+    // temp set before validation
+    setCurrentUserVote(-1);
     handleUpdateVote(-1);
   }
 
   function handleRemoveVote() {
+    // temp set before validation
+    setCurrentUserVote(0);
     handleUpdateVote(0);
   }
 

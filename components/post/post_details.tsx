@@ -38,7 +38,7 @@ export default async function PostDetails({ postId }: PostDetailsProps) {
           </>
         )}
 
-        <div className="mt-10"></div>
+        <div className="my-5"></div>
         {user && <CommentTree postId={postId} userId={user.id} />}
       </div>
     </div>

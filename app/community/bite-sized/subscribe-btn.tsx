@@ -13,8 +13,7 @@ export default function SubscribeBtn({
   userId,
   communityId,
 }: SubscribeBtnProps) {
-  // Create a Supabase client configured to use cookies
-  const supabase = createClientComponentClient();
+  const supabase = createClientComponentClient(); // Create a Supabase client configured to use cookies
 
   const [isSubscribed, setIsSubscribed] = useState<boolean>();
 
