@@ -14,20 +14,20 @@ export function PostVotes({ postId, userId }: PostVotesProps) {
 
   const [update, setUpdate] = useState(0);
   const [currentUserVote, setCurrentUserVote] = useState(0);
-  const [totalPostVotes, setTotalPostVotes] = useState(0);
+  const [totalPostVotes, setTotalPostVotes] = useState<number | null>(null);
 
   useEffect(() => {
     async function fetchData() {
       // get current user vote
       const [voteData] = await Promise.all([
         supabase
-          .from("profile_post")
-          .select("vote")
-          .match({ user_voting: userId, voted_post: postId }),
+          .from("user_post_vote")
+          .select("user_vote")
+          .match({ user_id: userId, post_id: postId }),
       ]);
 
       if (voteData.data && voteData.data[0]) {
-        setCurrentUserVote(voteData.data[0].vote);
+        setCurrentUserVote(voteData.data[0].user_vote);
       }
 
       if (voteData.error) {
@@ -36,13 +36,13 @@ export function PostVotes({ postId, userId }: PostVotesProps) {
 
       // get the comments total votes
       const totalVotesData = await supabase
-        .from("profile_post")
-        .select("vote")
-        .eq("voted_post", postId);
+        .from("user_post_vote")
+        .select("user_vote")
+        .eq("post_id", postId);
 
       if (totalVotesData.data && totalVotesData.data.length > 0) {
         const totalVotes = totalVotesData.data.reduce(
-          (sum, vote) => sum + vote.vote,
+          (sum, vote) => sum + vote.user_vote,
           0
         );
         setTotalPostVotes(totalVotes);
@@ -50,6 +50,7 @@ export function PostVotes({ postId, userId }: PostVotesProps) {
 
       if (totalVotesData.error) {
         console.error(totalVotesData.error);
+        setTotalPostVotes(0);
       }
     }
 
@@ -70,28 +71,29 @@ export function PostVotes({ postId, userId }: PostVotesProps) {
 
   async function handleUpdateVote(voteValue: number) {
     const { data, error } = await supabase
-      .from("profile_post")
-      .upsert({ user_voting: userId, voted_post: postId, vote: voteValue })
+      .from("user_post_vote")
+      .upsert({ user_id: userId, voted_post: postId, vote: voteValue })
       .select();
 
     setUpdate(update + 1);
   }
 
-  return (
-    <>
-      <div className="flex gap-3">
-        <Button
-          onClick={currentUserVote === 1 ? handleRemoveVote : handleUpvote}
-        >
-          {currentUserVote === 1 ? "remove vote" : "Upvote"}
-        </Button>
-        <Button
-          onClick={currentUserVote === -1 ? handleRemoveVote : handleDownvote}
-        >
-          {currentUserVote === -1 ? "remove vote" : "Downvote"}
-        </Button>
-      </div>
-      votes: {totalPostVotes}
-    </>
-  );
+  if (totalPostVotes)
+    return (
+      <>
+        <div className="flex gap-3">
+          <Button
+            onClick={currentUserVote === 1 ? handleRemoveVote : handleUpvote}
+          >
+            {currentUserVote === 1 ? "remove vote" : "Upvote"}
+          </Button>
+          <Button
+            onClick={currentUserVote === -1 ? handleRemoveVote : handleDownvote}
+          >
+            {currentUserVote === -1 ? "remove vote" : "Downvote"}
+          </Button>
+        </div>
+        votes: {totalPostVotes}
+      </>
+    );
 }

@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+  @apply dark:text-zinc-100;
+}
+
+nav {
+  @apply bg-transparent !important;
+}

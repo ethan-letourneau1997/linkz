@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { CommentReply } from "./comment-reply";
 import { CommentVotes } from "./comment-vote";
-import { TextEditor } from "../editor/text-editor";
 import { getTimeSinceNow } from "@/lib/time_since";
 
 interface CommentTreeProps {
@@ -16,9 +15,9 @@ interface Comment {
   created_at: string;
   root_post: number;
   comment_content: string;
-  parent_comment: number | null;
-  user_commenting: {
-    user_name: string;
+  parent_comment_id: number | null;
+  commenting_user_id: {
+    username: string;
     id: string;
   };
 }
@@ -37,14 +36,14 @@ export function CommentTree({ postId, userId }: CommentTreeProps) {
 
   useEffect(() => {
     async function getUsername() {
-      let { data: profile, error } = await supabase
-        .from("profile")
-        .select("user_name")
+      let { data: user_profile, error } = await supabase
+        .from("user_profile")
+        .select("username")
         .eq("id", userId)
         .limit(1)
         .single();
-      if (profile) console.log(profile.user_name);
-      if (profile) setUsername(profile.user_name);
+
+      if (user_profile) setUsername(user_profile.username);
     }
     getUsername();
   });
@@ -57,7 +56,7 @@ export function CommentTree({ postId, userId }: CommentTreeProps) {
     async function getComments() {
       const { data, error } = await supabase
         .from("comment")
-        .select("*, user_commenting(id, user_name)")
+        .select("*, commenting_user_id(id, username)")
         .eq("root_post", postId);
       if (data) setComments(data);
     }
@@ -67,12 +66,12 @@ export function CommentTree({ postId, userId }: CommentTreeProps) {
 
   const renderComment = (comment: Comment) => {
     const childComments = comments.filter(
-      (c) => c.parent_comment === comment.id
+      (c) => c.parent_comment_id === comment.id
     );
 
     return (
       <div key={comment.id} className="p-3 border">
-        - {comment.user_commenting.user_name} -{" "}
+        - {comment.commenting_user_id.username} -{" "}
         {getTimeSinceNow(comment.created_at)}
         <div dangerouslySetInnerHTML={{ __html: comment.comment_content }} />
         <CommentVotes commentId={comment.id} userId={userId} />
@@ -90,7 +89,7 @@ export function CommentTree({ postId, userId }: CommentTreeProps) {
   };
 
   const rootComments = comments.filter(
-    (comment) => comment.parent_comment === null
+    (comment) => comment.parent_comment_id === null
   );
 
   return (

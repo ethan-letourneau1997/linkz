@@ -21,13 +21,13 @@ export function CommentVotes({ commentId, userId }: CommentVotesProps) {
       // get current user vote
       const [voteData] = await Promise.all([
         supabase
-          .from("profile_comment")
-          .select("vote")
+          .from("user_comment_vote")
+          .select("user_vote")
           .match({ voter_id: userId, comment_id: commentId }),
       ]);
 
       if (voteData.data && voteData.data[0]) {
-        setCurrentUserVote(voteData.data[0].vote);
+        setCurrentUserVote(voteData.data[0].user_vote);
       }
 
       if (voteData.error) {
@@ -36,13 +36,13 @@ export function CommentVotes({ commentId, userId }: CommentVotesProps) {
 
       // get the comments total votes
       const totalVotesData = await supabase
-        .from("profile_comment")
-        .select("vote")
+        .from("user_comment_vote")
+        .select("user_vote")
         .eq("comment_id", commentId);
 
       if (totalVotesData.data && totalVotesData.data.length > 0) {
         const totalVotes = totalVotesData.data.reduce(
-          (sum, vote) => sum + vote.vote,
+          (sum, user_vote) => sum + user_vote.user_vote,
           0
         );
         setTotalCommentVotes(totalVotes);
@@ -80,8 +80,8 @@ export function CommentVotes({ commentId, userId }: CommentVotesProps) {
 
   async function handleUpdateVote(voteValue: number) {
     const { data, error } = await supabase
-      .from("profile_comment")
-      .upsert({ comment_id: commentId, voter_id: userId, vote: voteValue })
+      .from("user_comment_vote")
+      .upsert({ comment_id: commentId, voter_id: userId, user_vote: voteValue })
       .select();
 
     setUpdate(update + 1);

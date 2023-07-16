@@ -17,10 +17,10 @@ export default async function UserProfile() {
   // fetch user profile from database
   if (user) {
     const { data, error: profileError } = await supabase
-      .from("profile")
+      .from("user_profile")
       .select("*")
       .eq("id", user.id);
-    if (data) userName = data[0].user_name;
+    if (data) userName = data[0].username;
 
     error = profileError;
   }
@@ -33,7 +33,7 @@ export default async function UserProfile() {
     let { data, error } = await supabase
       .from("community")
       .select("*")
-      .eq("created_by", user.id);
+      .eq("creator_user_id", user.id);
 
     if (data) userCommunities = data;
   }
@@ -44,7 +44,7 @@ export default async function UserProfile() {
   // fetch user subscriptions from database
   if (user) {
     let { data, error } = await supabase
-      .from("profile_community")
+      .from("user_community")
       .select("community(id, community_name)")
       .eq("user_id", user.id);
 
@@ -60,7 +60,7 @@ export default async function UserProfile() {
     let { data: posts, error } = await supabase
       .from("post")
       .select("*")
-      .eq("posted_by", user.id);
+      .eq("posting_user_id", user.id);
 
     userPosts = posts;
     if (error) console.log(error);
@@ -111,7 +111,7 @@ export default async function UserProfile() {
             <h4 className="mt-3 mb-3 font-bold">
               <Link
                 className="underline"
-                href={`/community/${post.posted_in}/post/${post.id}`}
+                href={`/community/${post.community_id}/post/${post.id}`}
               >
                 {post.post_title}
               </Link>

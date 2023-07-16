@@ -35,7 +35,7 @@ export interface Database {
           {
             foreignKeyName: "community_created_by_fkey";
             columns: ["created_by"];
-            referencedRelation: "profile";
+            referencedRelation: "user_profile";
             referencedColumns: ["id"];
           }
         ];
@@ -46,7 +46,7 @@ export interface Database {
           id: number;
           post_content: string;
           post_title: string;
-          posted_by: string;
+          posting_user_id: string;
           posted_in: number;
         };
         Insert: {
@@ -54,7 +54,7 @@ export interface Database {
           id?: number;
           post_content: string;
           post_title: string;
-          posted_by: string;
+          posting_user_id: string;
           posted_in: number;
         };
         Update: {
@@ -62,14 +62,14 @@ export interface Database {
           id?: number;
           post_content?: string;
           post_title?: string;
-          posted_by?: string;
+          posting_user_id?: string;
           posted_in?: number;
         };
         Relationships: [
           {
-            foreignKeyName: "post_posted_by_fkey";
-            columns: ["posted_by"];
-            referencedRelation: "profile";
+            foreignKeyName: "post_posting_user_id_fkey";
+            columns: ["posting_user_id"];
+            referencedRelation: "user_profile";
             referencedColumns: ["id"];
           },
           {
@@ -83,15 +83,15 @@ export interface Database {
       profile: {
         Row: {
           id: string;
-          user_name: string | null;
+          username: string | null;
         };
         Insert: {
           id: string;
-          user_name?: string | null;
+          username?: string | null;
         };
         Update: {
           id?: string;
-          user_name?: string | null;
+          username?: string | null;
         };
         Relationships: [
           {

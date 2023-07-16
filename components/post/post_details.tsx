@@ -27,9 +27,9 @@ export default async function PostDetails({ postId }: PostDetailsProps) {
   }
 
   return (
-    <div className="container ">
+    <div>
       <div className="max-w-4xl mx-auto ">
-        {user && user.id === focusPost.posted_by && (
+        {user && user.id === focusPost.posting_user_id && (
           <>
             <div className="my-5 ">
               <EditPost post={focusPost} />

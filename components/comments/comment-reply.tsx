@@ -37,9 +37,9 @@ export function CommentReply({
       .from("comment")
       .insert([
         {
-          user_commenting: userId,
+          commenting_user_id: userId,
           root_post: rootPostId,
-          parent_comment: parentId,
+          parent_comment_id: parentId,
           comment_content: replyContent,
         },
       ])

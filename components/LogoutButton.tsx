@@ -2,6 +2,7 @@
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
+import { Button } from "./ui/button";
 
 export default function LogoutButton() {
   const router = useRouter();
@@ -15,11 +16,8 @@ export default function LogoutButton() {
   };
 
   return (
-    <button
-      className="px-4 py-2 no-underline rounded-md bg-btn-background hover:bg-btn-background-hover"
-      onClick={signOut}
-    >
+    <Button variant="secondary" onClick={signOut}>
       Logout
-    </button>
+    </Button>
   );
 }

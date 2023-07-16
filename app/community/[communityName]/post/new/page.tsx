@@ -25,7 +25,6 @@ export default async function Index({ params }: IndexProps) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  console.log(communityName);
   if (community && user) {
     return <CreatePost communityId={community[0].id} userId={user.id} />;
   }

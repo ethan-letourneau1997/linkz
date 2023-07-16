@@ -1,13 +1,8 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import Link from "next/link";
-import LogoutButton from "../components/LogoutButton";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { UsernameForm } from "@/components/user/username-form";
 
-export default async function Index() {
-  // get user
+async function fetchUserProfile() {
   const supabase = createServerComponentClient({ cookies });
 
   const {
@@ -17,20 +12,35 @@ export default async function Index() {
   let username = "";
   let error = null;
 
-  // fetch user profile from database
   if (user) {
     const { data, error: profileError } = await supabase
-      .from("profile")
+      .from("user_profile")
       .select("*")
-      .eq("id", user.id);
-    if (data && username) username = data[0].user_name;
+      .eq("id", user.id)
+      .limit(1)
+      .single();
+
+    if (data && data.username) {
+      username = data.username;
+    }
 
     error = profileError;
   }
-  if (user && username)
+
+  if (user && username) {
     return (
-      <div className="flex items-center gap-4 text-3xl">Hello, {username}!</div>
+      <div>
+        <p className="text-3xl font-semibold text-center">Hello, {username}!</p>
+        <p className="mt-4 text-2xl text-center">start exploring!</p>
+      </div>
     );
-  else if (user) return <UsernameForm userId={user.id} />;
-  else return <p className="text-2xl">No user logged in.</p>;
+  } else if (user) {
+    return <UsernameForm userId={user.id} />;
+  } else {
+    return <p className="text-2xl">No user logged in.</p>;
+  }
+}
+
+export default function Index() {
+  return fetchUserProfile();
 }

@@ -33,8 +33,8 @@ export function CreatePost({ communityId, userId }: CreatePostProps) {
       .from("post")
       .insert([
         {
-          posted_by: userId,
-          posted_in: communityId,
+          posting_user_id: userId,
+          community_id: communityId,
           post_title: postTitle,
           post_content: postContent,
         },

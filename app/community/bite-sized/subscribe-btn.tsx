@@ -3,6 +3,7 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useEffect, useState } from "react";
 import { revalidatePath } from "next/cache";
+import { Button } from "@/components/ui/button";
 
 interface SubscribeBtnProps {
   userId: string;
@@ -21,7 +22,7 @@ export default function SubscribeBtn({
     const fetchData = async () => {
       try {
         let { data, error } = await supabase
-          .from("profile_community")
+          .from("user_community")
           .select("community(id, community_name)")
           .match({ user_id: userId, community_id: communityId });
 
@@ -45,7 +46,7 @@ export default function SubscribeBtn({
   // subscribe user to community
   async function handleSubscribe() {
     const { data, error } = await supabase
-      .from("profile_community")
+      .from("user_community")
       .insert([{ user_id: userId, community_id: communityId }])
       .select();
 
@@ -57,7 +58,7 @@ export default function SubscribeBtn({
   // unsubscribe user from community
   async function handleUnsubscribe() {
     const { error } = await supabase
-      .from("profile_community")
+      .from("user_community")
       .delete()
       .match({ user_id: userId, community_id: communityId });
 
@@ -68,20 +69,16 @@ export default function SubscribeBtn({
   return (
     <>
       {isSubscribed ? (
-        <button
-          onClick={handleUnsubscribe}
-          className="px-4 py-2 font-bold text-white bg-red-500 rounded-full hover:bg-red-700"
-        >
-          unsubscribe
-        </button>
+        <Button onClick={handleUnsubscribe}>unsubscribe</Button>
       ) : null}
       {isSubscribed === false ? (
-        <button
+        <Button
+          variant="secondary"
+          className="h-8 text-xs "
           onClick={handleSubscribe}
-          className="px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700"
         >
-          subscribe
-        </button>
+          Subscribe
+        </Button>
       ) : null}
     </>
   );

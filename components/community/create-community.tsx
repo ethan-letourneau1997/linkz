@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 
 export default function CreateCommunity() {
   // user state
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<any>(null);
   // community info states
   const [communityName, setCommunityName] = useState("");
   const [communityDescription, setCommunityDescription] = useState("");
@@ -25,13 +25,15 @@ export default function CreateCommunity() {
     getUser();
   }, [supabase]);
 
-  const handleNameChange = (event) => {
+  const handleNameChange = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
     setCommunityName(event.target.value);
-    console.log(communityName);
   };
-  console.log(communityName);
 
-  const handleDescriptionChange = (event) => {
+  const handleDescriptionChange = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
     setCommunityDescription(event.target.value);
   };
 
@@ -43,7 +45,7 @@ export default function CreateCommunity() {
         {
           community_name: communityName,
           community_description: communityDescription,
-          created_by: user!.id,
+          creator_user_id: user!.id,
         },
       ])
       .select();

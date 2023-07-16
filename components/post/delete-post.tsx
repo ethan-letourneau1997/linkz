@@ -10,7 +10,7 @@ interface EditPostProps {
     id: number;
     post_content: string;
     post_title: string;
-    posted_by: string;
+    posting_user_id: string;
   };
 }
 

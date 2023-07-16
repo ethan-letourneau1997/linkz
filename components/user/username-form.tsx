@@ -23,8 +23,8 @@ export function UsernameForm({ userId }: UsernameForm) {
   function handleUserSubmit() {
     async function Submit() {
       const { data, error } = await supabase
-        .from("profile")
-        .insert([{ id: userId, user_name: userInput }])
+        .from("user_profile")
+        .insert([{ id: userId, username: userInput }])
         .select();
     }
     Submit();

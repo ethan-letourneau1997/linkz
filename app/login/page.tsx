@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -69,8 +71,7 @@ export default function Login() {
           <label className="text-md" htmlFor="email">
             Email
           </label>
-          <input
-            className="px-4 py-2 mb-6 border rounded-md bg-inherit"
+          <Input
             name="email"
             onChange={(e) => setEmail(e.target.value)}
             value={email}
@@ -79,8 +80,7 @@ export default function Login() {
           <label className="text-md" htmlFor="password">
             Password
           </label>
-          <input
-            className="px-4 py-2 mb-6 border rounded-md bg-inherit"
+          <Input
             type="password"
             name="password"
             onChange={(e) => setPassword(e.target.value)}
@@ -89,17 +89,19 @@ export default function Login() {
           />
           {view === "sign-in" && (
             <>
-              <button className="px-4 py-2 mb-6 text-white bg-green-700 rounded">
+              <Button className="mt-3" variant="secondary">
                 Sign In
-              </button>
-              <p className="text-sm text-center">
+              </Button>
+              <p className="mt-3 text-sm text-center">
                 Don't have an account?
-                <button
-                  className="ml-1 underline"
+                <Button
+                  // variant="outline"
+                  variant="secondary"
+                  className="ml-5 text-sm"
                   onClick={() => setView("sign-up")}
                 >
                   Sign Up Now
-                </button>
+                </Button>
               </p>
             </>
           )}

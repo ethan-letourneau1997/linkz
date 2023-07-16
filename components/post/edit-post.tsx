@@ -11,7 +11,7 @@ interface EditPostProps {
     id: number;
     post_content: string;
     post_title: string;
-    posted_by: string;
+    posting_user_id: string;
   };
 }
 
@@ -28,8 +28,6 @@ export function EditPost({ post }: EditPostProps) {
       .update({ post_content: postContent })
       .eq("id", post.id)
       .select();
-
-    console.log(data);
   }
 
   // save post
