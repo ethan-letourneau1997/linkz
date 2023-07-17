@@ -21,24 +21,28 @@ export default async function PostDetails({ postId }: PostDetailsProps) {
   let { data: post, error } = await supabase
     .from("post")
     .select("*")
-    .eq("id", postId);
-  if (post && post[0]) {
-    focusPost = post[0];
+    .match({ id: postId })
+    .limit(1)
+    .single();
+  if (post && post) {
+    focusPost = post;
   }
 
   return (
     <div>
       <div className="max-w-4xl mx-auto ">
-        {user && user.id === focusPost.posting_user_id && (
-          <>
-            <div className="my-5 ">
-              <EditPost post={focusPost} />
-            </div>
-            <PostVotes postId={focusPost.id} userId={user.id} />
-          </>
+        {user && user.id === focusPost.posting_user_id ? (
+          <div className="my-5 ">
+            <EditPost post={focusPost} />
+          </div>
+        ) : (
+          <div
+            className="mt-5 appearance-none rich-text"
+            dangerouslySetInnerHTML={{ __html: focusPost.post_content }}
+          />
         )}
+        <PostVotes postId={focusPost.id} userId={user ? user.id : null} />
 
-        <div className="my-5"></div>
         {user && <CommentTree postId={postId} userId={user.id} />}
       </div>
     </div>

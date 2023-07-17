@@ -1,6 +1,7 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import Link from "next/link";
+import { RenderImage } from "../image/image";
 
 export default async function UserProfile() {
   const supabase = createServerComponentClient({ cookies });
@@ -119,6 +120,7 @@ export default async function UserProfile() {
           </div>
         ))}
       </div>
+      <RenderImage />
     </div>
   );
 }

@@ -3,10 +3,11 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import { GetVoteCount } from "./get-vote-count";
 
 interface PostVotesProps {
   postId: string;
-  userId: string;
+  userId: string | null;
 }
 
 export function PostVotes({ postId, userId }: PostVotesProps) {
@@ -14,7 +15,7 @@ export function PostVotes({ postId, userId }: PostVotesProps) {
 
   const [update, setUpdate] = useState(0);
   const [currentUserVote, setCurrentUserVote] = useState(0);
-  const [totalPostVotes, setTotalPostVotes] = useState<number | null>(null);
+  const [totalPostVotes, setTotalPostVotes] = useState<number | null>(0);
 
   useEffect(() => {
     async function fetchData() {
@@ -23,7 +24,7 @@ export function PostVotes({ postId, userId }: PostVotesProps) {
         supabase
           .from("user_post_vote")
           .select("user_vote")
-          .match({ user_id: userId, post_id: postId }),
+          .match({ voter_id: userId, post_id: postId }),
       ]);
 
       if (voteData.data && voteData.data[0]) {
@@ -72,15 +73,16 @@ export function PostVotes({ postId, userId }: PostVotesProps) {
   async function handleUpdateVote(voteValue: number) {
     const { data, error } = await supabase
       .from("user_post_vote")
-      .upsert({ user_id: userId, voted_post: postId, vote: voteValue })
+      .upsert({ voter_id: userId, post_id: postId, user_vote: voteValue })
       .select();
+    if (error) console.log(error);
 
     setUpdate(update + 1);
   }
 
-  if (totalPostVotes)
-    return (
-      <>
+  return (
+    <>
+      {userId && (
         <div className="flex gap-3">
           <Button
             onClick={currentUserVote === 1 ? handleRemoveVote : handleUpvote}
@@ -93,7 +95,8 @@ export function PostVotes({ postId, userId }: PostVotesProps) {
             {currentUserVote === -1 ? "remove vote" : "Downvote"}
           </Button>
         </div>
-        votes: {totalPostVotes}
-      </>
-    );
+      )}
+      <span> votes: {totalPostVotes}</span>
+    </>
+  );
 }

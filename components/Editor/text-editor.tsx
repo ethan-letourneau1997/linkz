@@ -44,7 +44,7 @@ export function TextEditor({ updateHTML, content }: TextEditorProps) {
   };
 
   return (
-    <div className="mt-5 ">
+    <div id="Editor-Wrapper" className="mt-5 text-black ">
       <RichTextEditor editor={editor}>
         <RichTextEditor.Toolbar sticky stickyOffset={60}>
           <RichTextEditor.ControlsGroup>
@@ -86,7 +86,7 @@ export function TextEditor({ updateHTML, content }: TextEditorProps) {
           </RichTextEditor.ControlsGroup>
         </RichTextEditor.Toolbar>
 
-        <RichTextEditor.Content />
+        <RichTextEditor.Content className=" dark:bg-neutral-800" />
       </RichTextEditor>
     </div>
   );

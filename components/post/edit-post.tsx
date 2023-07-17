@@ -12,6 +12,7 @@ interface EditPostProps {
     post_content: string;
     post_title: string;
     posting_user_id: string;
+    is_image: boolean;
   };
 }
 
@@ -72,12 +73,14 @@ export function EditPost({ post }: EditPostProps) {
             className="mt-5 appearance-none rich-text"
             dangerouslySetInnerHTML={{ __html: post.post_content }}
           />
-          <button
-            className="px-3 py-1 mt-6 border hover:bg-white hover:text-black"
-            onClick={handlePostEdit}
-          >
-            edit
-          </button>
+          {!post.is_image && (
+            <button
+              className="px-3 py-1 mt-6 border hover:bg-white hover:text-black"
+              onClick={handlePostEdit}
+            >
+              edit
+            </button>
+          )}
         </>
       )}
     </div>

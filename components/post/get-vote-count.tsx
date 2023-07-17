@@ -4,23 +4,24 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useEffect, useState } from "react";
 
 interface GetVoteCountProps {
-  postId: number;
+  postId: number | string;
+  vote_table: string;
 }
 
-export function GetVoteCount({ postId }: GetVoteCountProps) {
+export function GetVoteCount({ postId, vote_table }: GetVoteCountProps) {
   const supabase = createClientComponentClient(); // get supabase
   const [totalVotes, setTotalVotes] = useState(0);
 
   useEffect(() => {
     async function getVotes() {
-      let { data: user_post_vote, error } = await supabase
-        .from("user_post_vote")
+      let { data: user_votes, error } = await supabase
+        .from(vote_table)
         .select("user_vote")
         .eq("post_id", postId);
 
-      if (user_post_vote) {
+      if (user_votes) {
         // Get the votes array from the response data
-        const votesArray = user_post_vote.map((item) => item.user_vote);
+        const votesArray = user_votes.map((item) => item.user_vote);
         const totalVotes = votesArray.reduce(
           (accumulator, currentValue) => accumulator + currentValue,
           0
@@ -42,9 +43,5 @@ export function GetVoteCount({ postId }: GetVoteCountProps) {
     getVotes();
   }, [postId]);
 
-  return (
-    <div>
-      <p>{totalVotes}</p>
-    </div>
-  );
+  return <span>{totalVotes}</span>;
 }

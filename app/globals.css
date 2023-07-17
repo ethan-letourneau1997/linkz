@@ -9,3 +9,15 @@
 nav {
   @apply bg-transparent !important;
 }
+
+.mantine-RichTextEditor-content {
+  @apply dark:bg-neutral-800;
+}
+
+.mantine-RichTextEditor-toolbar {
+  @apply dark:bg-neutral-900;
+}
+
+.mantine-Notification-root {
+  @apply dark:bg-neutral-900 !important;
+}

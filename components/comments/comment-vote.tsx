@@ -6,7 +6,7 @@ import { Button } from "../ui/button";
 
 interface CommentVotesProps {
   commentId: number;
-  userId: string;
+  userId: string | null;
 }
 
 export function CommentVotes({ commentId, userId }: CommentVotesProps) {
@@ -90,19 +90,20 @@ export function CommentVotes({ commentId, userId }: CommentVotesProps) {
   return (
     <div>
       <p>votes: &nbsp;{totalCommentVotes}</p>
-
-      <div className="flex gap-3">
-        <Button
-          onClick={currentUserVote === 1 ? handleRemoveVote : handleUpvote}
-        >
-          {currentUserVote === 1 ? "remove vote" : "Upvote"}
-        </Button>
-        <Button
-          onClick={currentUserVote === -1 ? handleRemoveVote : handleDownvote}
-        >
-          {currentUserVote === -1 ? "remove vote" : "Downvote"}
-        </Button>
-      </div>
+      {userId && (
+        <div className="flex gap-3">
+          <Button
+            onClick={currentUserVote === 1 ? handleRemoveVote : handleUpvote}
+          >
+            {currentUserVote === 1 ? "remove vote" : "Upvote"}
+          </Button>
+          <Button
+            onClick={currentUserVote === -1 ? handleRemoveVote : handleDownvote}
+          >
+            {currentUserVote === -1 ? "remove vote" : "Downvote"}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

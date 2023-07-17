@@ -3,6 +3,7 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { GetVoteCount } from "../post/get-vote-count";
+import { getTimeSinceNow } from "@/lib/time_since";
 
 interface CommunityProps {
   communityName: string;
@@ -29,7 +30,8 @@ export default async function Community({ communityName }: CommunityProps) {
     let { data: posts, error } = await supabase
       .from("post")
       .select("*, posting_user_id(*)")
-      .eq("community_id", community[0].id);
+      .eq("community_id", community[0].id)
+      .order("id", { ascending: false });
 
     communityPosts = posts;
   }
@@ -59,9 +61,16 @@ export default async function Community({ communityName }: CommunityProps) {
               </Link>
             </div>
 
+            <div className="w-full ">
+              <img
+                className="h-auto max-w-full"
+                src="https://imgur.com/YFqYFQT"
+                alt="image description"
+              />
+            </div>
+
             {communityPosts?.map((post) => (
               <div key={post.id} className="p-2 mt-2 ">
-                <GetVoteCount postId={post.id} />
                 <div className="flex">
                   <h2 className="mb-3 text-lg font-bold ">
                     <Link
@@ -71,7 +80,14 @@ export default async function Community({ communityName }: CommunityProps) {
                       {post.post_title}
                     </Link>
                     <span className="text-base font-light">
-                      &nbsp;&nbsp;votes: {post.vote_count}
+                      &nbsp;&nbsp; votes:{" "}
+                      <GetVoteCount
+                        postId={post.id}
+                        vote_table="user_post_vote"
+                      />
+                    </span>
+                    <span className="text-sm font-semibold ">
+                      &nbsp;&nbsp; {getTimeSinceNow(post.created_at)}
                     </span>
                   </h2>
                 </div>

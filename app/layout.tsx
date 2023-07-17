@@ -1,11 +1,10 @@
-import Link from "next/link";
 import "./globals.css";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import LogoutButton from "@/components/LogoutButton";
+
 import { Inter } from "next/font/google";
 import { IBM_Plex_Sans } from "next/font/google";
-import { buttonVariants } from "@/components/ui/button";
+
 import { NavHeader } from "@/components/navigation/nav-header";
 
 export const metadata = {
@@ -42,36 +41,6 @@ export default async function RootLayout({
         <div className="absolute w-screen view">
           <NavHeader />
         </div>
-        {/* <nav className="flex justify-between px-10 py-4 shadow-sm">
-          <div className="flex gap-6 my-auto">
-            <Link className="text-lg hover:underline" href="/">
-              Home
-            </Link>
-            <Link className="text-lg hover:underline" href="/community/all">
-              Communities
-            </Link>
-            <Link
-              className="text-lg hover:underline"
-              href={`/user/${user?.id}`}
-            >
-              Profile
-            </Link>
-          </div>
-          <div>
-            {user ? (
-              <div className="flex items-center gap-4">
-                <LogoutButton />
-              </div>
-            ) : (
-              <Link
-                href="/login"
-                className={buttonVariants({ variant: "outline" })}
-              >
-                Login
-              </Link>
-            )}
-          </div>
-        </nav> */}
 
         <main className="flex flex-col items-center px-5 pt-24">
           {children}

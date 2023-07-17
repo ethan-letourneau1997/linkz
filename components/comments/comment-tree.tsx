@@ -7,7 +7,7 @@ import { getTimeSinceNow } from "@/lib/time_since";
 
 interface CommentTreeProps {
   postId: number;
-  userId: string;
+  userId: string | null;
 }
 
 interface Comment {
@@ -75,7 +75,7 @@ export function CommentTree({ postId, userId }: CommentTreeProps) {
         {getTimeSinceNow(comment.created_at)}
         <div dangerouslySetInnerHTML={{ __html: comment.comment_content }} />
         <CommentVotes commentId={comment.id} userId={userId} />
-        {username && (
+        {username && userId && (
           <CommentReply
             refresh={treeRefresh}
             userId={userId}
@@ -94,7 +94,7 @@ export function CommentTree({ postId, userId }: CommentTreeProps) {
 
   return (
     <div>
-      {username && (
+      {username && userId && (
         <CommentReply
           refresh={treeRefresh}
           userId={userId}
