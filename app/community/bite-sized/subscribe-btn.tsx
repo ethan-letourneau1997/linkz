@@ -69,7 +69,14 @@ export default function SubscribeBtn({
   return (
     <>
       {isSubscribed ? (
-        <Button onClick={handleUnsubscribe}>unsubscribe</Button>
+        // <Button
+        //   onClick={handleUnsubscribe}
+        //   className=" h-6  px-2 text-xs"
+        //   variant="secondary"
+        // >
+        //   unsubscribe
+        // </Button>
+        <span className="my-auto text-sm text-neutral-400">unsubscribe</span>
       ) : null}
       {isSubscribed === false ? (
         <Button

@@ -1,14 +1,11 @@
+import { fetchUser } from "@/lib/utils";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
 export async function RenderImage() {
   const supabase = createServerComponentClient({ cookies });
 
-  console.log(supabase.storage);
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await fetchUser(supabase); // get user
 
   let imageUrl;
 
@@ -21,12 +18,9 @@ export async function RenderImage() {
       .single();
     if (user_image) console.log(user_image.image_path);
     const imagePath = user_image.image_path;
-    console.log(imagePath);
 
     const { data } = supabase.storage.from("Images").getPublicUrl(imagePath);
     imageUrl = data.publicUrl;
-
-    console.log(data.publicUrl);
   }
 
   return (

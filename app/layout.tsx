@@ -6,6 +6,9 @@ import { Inter } from "next/font/google";
 import { IBM_Plex_Sans } from "next/font/google";
 
 import { NavHeader } from "@/components/navigation/nav-header";
+import { NavWrapper } from "@/components/navigation/nav-wrapper";
+import { fetchUser } from "@/lib/utils";
+import { Suspense } from "react";
 
 export const metadata = {
   title: "Create Next App",
@@ -27,23 +30,19 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // get supabase
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerComponentClient({ cookies }); // get supabase
 
-  // get user
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await fetchUser(supabase); // get user
 
   return (
-    <html lang="en" className={`dark ${plex.className}`}>
-      <body className="min-h-screen dark:bg-neutral-950 ">
-        <div className="absolute w-screen view">
-          <NavHeader />
+    <html lang="en" className={`${plex.className}`}>
+      <body className="min-h-screen bg-neutral-300 dark:bg-neutral-950 ">
+        <div className="view sticky top-0 z-50 w-screen ">
+          <NavWrapper />
         </div>
 
-        <main className="flex flex-col items-center px-5 pt-24">
-          {children}
+        <main className="mb-3 flex flex-col items-center">
+          <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
         </main>
       </body>
     </html>

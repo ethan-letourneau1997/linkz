@@ -49,18 +49,18 @@ export function EditPost({ post }: EditPostProps) {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-centerx">{post.post_title}</h1>
+      <h1 className="text-centerx text-lg font-semibold">{post.post_title}</h1>
       {editMode ? (
         <>
           <TextEditor content={postContent} updateHTML={updatePostContent} />
           <button
-            className="px-3 py-1 mt-6 border hover:bg-white hover:text-black"
+            className="mt-6 border px-3 py-1 hover:bg-white hover:text-black"
             onClick={handlePostSave}
           >
             save
           </button>
           <button
-            className="px-3 py-1 mt-6 border hover:bg-white hover:text-black"
+            className="mt-6 border px-3 py-1 hover:bg-white hover:text-black"
             onClick={handleCancelEdit}
           >
             cancel
@@ -70,12 +70,12 @@ export function EditPost({ post }: EditPostProps) {
       ) : (
         <>
           <div
-            className="mt-5 appearance-none rich-text"
+            className="rich-text mt-5 appearance-none"
             dangerouslySetInnerHTML={{ __html: post.post_content }}
           />
           {!post.is_image && (
             <button
-              className="px-3 py-1 mt-6 border hover:bg-white hover:text-black"
+              className="mt-6 border px-3 py-1 hover:bg-white hover:text-black"
               onClick={handlePostEdit}
             >
               edit

@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchUser } from "@/lib/utils";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import React, { useEffect, useState } from "react";
 
@@ -16,10 +17,7 @@ export default function CreateCommunity() {
   // get user
   useEffect(() => {
     const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) setUser(user);
+      const user = await fetchUser(supabase); // get user
     };
 
     getUser();
@@ -50,8 +48,6 @@ export default function CreateCommunity() {
       ])
       .select();
 
-    console.log(data);
-
     if (error) console.log(error);
   }
 
@@ -59,7 +55,7 @@ export default function CreateCommunity() {
     <div>
       <p className="mb-4 text-xl font-semibold">New Community</p>
       <div className="mb-4">
-        <label className="block mb-2" htmlFor="name">
+        <label className="mb-2 block" htmlFor="name">
           Community Name
         </label>
         <input
@@ -71,7 +67,7 @@ export default function CreateCommunity() {
         />
       </div>
       <div className="mb-4">
-        <label className="block mb-2" htmlFor="description">
+        <label className="mb-2 block" htmlFor="description">
           Community Description
         </label>
         <input
@@ -83,7 +79,7 @@ export default function CreateCommunity() {
         />
       </div>
       <button
-        className="px-3 py-1 border hover:bg-white hover:text-black"
+        className="border px-3 py-1 hover:bg-white hover:text-black"
         onClick={handleCreateCommunity}
       >
         Create

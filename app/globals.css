@@ -7,7 +7,7 @@
 }
 
 nav {
-  @apply bg-transparent !important;
+  @apply bg-neutral-900 dark:bg-transparent  !important;
 }
 
 .mantine-RichTextEditor-content {
@@ -20,4 +20,27 @@ nav {
 
 .mantine-Notification-root {
   @apply dark:bg-neutral-900 !important;
+}
+
+#User-posts #Post-image {
+  @apply !important;
+}
+
+.Profile-tabs {
+  min-height: 92vh !important;
+}
+
+.box {
+  -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+}
+
+pre {
+  display: grid;
+}
+
+code {
+  max-width: 100% !important;
+  overflow: auto !important;
+  display: inline-block;
 }

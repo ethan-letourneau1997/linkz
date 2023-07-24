@@ -1,4 +1,5 @@
 "use client";
+import { fetchUser } from "@/lib/utils";
 import {
   createClientComponentClient,
   createServerComponentClient,
@@ -17,9 +18,7 @@ export function UploadImage() {
   //   get user
   useEffect(() => {
     const getUserId = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const user = await fetchUser(supabase); // get user
       if (user) setUserId(user.id);
     };
 
@@ -40,25 +39,6 @@ export function UploadImage() {
         const imagePath = fileData.path;
 
         uploadImage(imagePath);
-
-        // const { data, error } = await supabase
-        //   .from("user_image")
-        //   .insert([{ user_id: userId, image_path: imagePath }])
-        //   .select();
-
-        // use image path to get src
-
-        // insert source into string
-
-        // save string as new post
-
-        // if (data) {
-        //   console.log("Data inserted successfully:", data);
-        // }
-
-        // if (error) {
-        //   console.log("Error inserting data:", error);
-        // }
       }
 
       if (fileError) {
@@ -66,8 +46,6 @@ export function UploadImage() {
       }
     }
   };
-
-  console.log(file);
 
   const handleFileSelected = (e) => {
     setFile(e.target.files[0]);
@@ -102,8 +80,6 @@ export function UploadImage() {
           },
         ])
         .select();
-      if (data) console.log(data);
-      if (error) console.log(error);
     }
 
     // save string as new post
@@ -115,9 +91,6 @@ export function UploadImage() {
         <input type="file" name="image" onChange={handleFileSelected} />
         <button type="submit">Upload image</button>
       </form>
-      {/* <button className="block p-5 mt-5 bg-slate-500" onClick={uploadImage}>
-        test image
-      </button> */}
     </>
   );
 }

@@ -1,13 +1,12 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { UsernameForm } from "@/components/user/username-form";
+import { fetchUser } from "@/lib/utils";
 
 async function fetchUserProfile() {
   const supabase = createServerComponentClient({ cookies });
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await fetchUser(supabase); // get user
 
   let username = "";
   let error = null;
@@ -30,8 +29,8 @@ async function fetchUserProfile() {
   if (user && username) {
     return (
       <div>
-        <p className="text-3xl font-semibold text-center">Hello, {username}!</p>
-        <p className="mt-4 text-2xl text-center">start exploring!</p>
+        <p className="text-center text-3xl font-semibold">Hello, {username}!</p>
+        <p className="mt-4 text-center text-2xl">start exploring!</p>
       </div>
     );
   } else if (user) {

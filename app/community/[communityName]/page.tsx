@@ -1,6 +1,6 @@
 import Community from "@/components/community/community";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+import dynamic from "next/dynamic.js";
+import { Suspense } from "react";
 
 interface IndexProps {
   params: {
@@ -8,8 +8,8 @@ interface IndexProps {
   };
 }
 
-export default async function Index({ params }: IndexProps) {
-  const communityName = params.communityName; // Extract the communityName from params
+export default function Index(context: IndexProps) {
+  const { communityName } = context.params; // Extract the communityName from params
 
   return <Community communityName={communityName} />;
 }

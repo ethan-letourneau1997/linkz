@@ -24,7 +24,7 @@ export function GetVoteCount({ postId, vote_table }: GetVoteCountProps) {
         const votesArray = user_votes.map((item) => item.user_vote);
         const totalVotes = votesArray.reduce(
           (accumulator, currentValue) => accumulator + currentValue,
-          0
+          0,
         );
 
         // If there is only one vote, display it directly
@@ -33,10 +33,6 @@ export function GetVoteCount({ postId, vote_table }: GetVoteCountProps) {
         } else {
           setTotalVotes(totalVotes);
         }
-      }
-
-      if (error) {
-        console.log(error);
       }
     }
 

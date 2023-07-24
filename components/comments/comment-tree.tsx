@@ -66,19 +66,22 @@ export function CommentTree({ postId, userId }: CommentTreeProps) {
 
   const renderComment = (comment: Comment) => {
     const childComments = comments.filter(
-      (c) => c.parent_comment_id === comment.id
+      (c) => c.parent_comment_id === comment.id,
     );
 
     return (
-      <div key={comment.id} className="p-3 border">
+      <div key={comment.id} className="border p-3">
         - {comment.commenting_user_id.username} -{" "}
-        {getTimeSinceNow(comment.created_at)}
+        {getTimeSinceNow({
+          originalTime: comment.created_at,
+          short: true,
+        })}
         <div dangerouslySetInnerHTML={{ __html: comment.comment_content }} />
-        <CommentVotes commentId={comment.id} userId={userId} />
-        {username && userId && (
+        <CommentVotes commentId={comment.id} userId={userId || null} />
+        {username && (
           <CommentReply
             refresh={treeRefresh}
-            userId={userId}
+            userId={userId || null}
             parentId={comment.id}
             rootPostId={comment.root_post}
           />
@@ -89,15 +92,15 @@ export function CommentTree({ postId, userId }: CommentTreeProps) {
   };
 
   const rootComments = comments.filter(
-    (comment) => comment.parent_comment_id === null
+    (comment) => comment.parent_comment_id === null,
   );
 
   return (
     <div>
-      {username && userId && (
+      {username && (
         <CommentReply
           refresh={treeRefresh}
-          userId={userId}
+          userId={userId || null}
           parentId={null}
           rootPostId={postId}
         />

@@ -1,4 +1,5 @@
-import { CreatePost } from "@/components/post/create-post";
+import { CreatePost } from "@/components/create/create-post";
+import { fetchUser } from "@/lib/utils";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { data } from "autoprefixer";
 import { cookies } from "next/headers";
@@ -20,10 +21,7 @@ export default async function Index({ params }: IndexProps) {
     .select("*")
     .eq("community_name", communityName);
 
-  // get user
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await fetchUser(supabase); // get user
 
   if (community && user) {
     return <CreatePost communityId={community[0].id} userId={user.id} />;

@@ -6,58 +6,89 @@ import LogoutButton from "../LogoutButton";
 import Link from "next/link";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useEffect, useState } from "react";
+import { fetchUser } from "@/lib/utils";
 
 export function NavHeader() {
   const supabase = createClientComponentClient();
   const [user, setUser] = useState<any>(null);
+  const [logBtn, setLogBtn] = useState<React.ReactNode>();
   // get user
   useEffect(() => {
     const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) setUser(user);
-    };
-
-    getUser();
-  }, [supabase]);
-
-  return (
-    <Navbar fluid>
-      <div className="flex justify-between w-full md:w-fit md:order-2">
-        {user ? (
+      const user = await fetchUser(supabase); // get user
+      if (user) {
+        setLogBtn(
           <div className="flex items-center gap-4">
             <LogoutButton />
           </div>
-        ) : (
+        );
+        setUser(user);
+      } else {
+        setLogBtn(
           <Link
             href="/login"
             className={buttonVariants({ variant: "outline" })}
           >
             Login
           </Link>
-        )}
+        );
+      }
+      if (user) setUser(user);
+    };
+
+    getUser();
+  }, [supabase, logBtn]);
+
+  return (
+    <Navbar fluid className=" bg-neutral-950">
+      <div className="flex justify-end w-full">
         <Navbar.Toggle />
       </div>
-      <Navbar.Collapse className="mt-1 dark:bg-neutral-950">
-        <Navbar.Link className="border-0 dark:text-neutral-200" href="/">
+      <Navbar.Collapse className="mt-1 dark:bg-neutral-950 ">
+        <Navbar.Link className="border-0 text-neutral-200" href="/">
           Home
         </Navbar.Link>
         <Navbar.Link
-          className="border-0 dark:text-neutral-2"
+          className="border-0 text-neutral-200"
           href="/community/all"
         >
           Communities
         </Navbar.Link>
-        <Navbar.Link
-          className="border-0 dark:text-neutral-2"
-          href={`/user/${user?.id}`}
-        >
-          Profile
-        </Navbar.Link>
-        <div className="mt-3" />
-        <LogoutButton />
+        {user && (
+          <Navbar.Link
+            className="border-0 text-neutral-200"
+            href={`/user/${user?.id}`}
+          >
+            Profile
+          </Navbar.Link>
+        )}
+
+        <div className="md:hidden">
+          <div className="mt-3" />
+          {logBtn}
+        </div>
       </Navbar.Collapse>
+
+      <div className="hidden md:block">{logBtn}</div>
     </Navbar>
   );
+}
+
+interface UserProps {
+  user: any;
+}
+
+function LoginLogout({ user }: UserProps) {
+  if (user)
+    return (
+      <div className="flex items-center gap-4">
+        <LogoutButton />
+      </div>
+    );
+  else if (user !== null)
+    return (
+      <Link href="/login" className={buttonVariants({ variant: "outline" })}>
+        Login
+      </Link>
+    );
 }

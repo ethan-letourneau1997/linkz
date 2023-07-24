@@ -3,6 +3,13 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import {
+  BiChevronDownCircle,
+  BiChevronUpCircle,
+  BiSolidChevronDownCircle,
+  BiSolidChevronUpCircle,
+} from "react-icons/bi";
+import { Skeleton } from "../ui/skeleton";
 
 interface CommentVotesProps {
   commentId: number;
@@ -12,19 +19,42 @@ interface CommentVotesProps {
 export function CommentVotes({ commentId, userId }: CommentVotesProps) {
   const supabase = createClientComponentClient(); // Create a Supabase client configured to use cookies
 
-  const [currentUserVote, setCurrentUserVote] = useState(0);
+  const [currentUserVote, setCurrentUserVote] = useState<null | number>(null);
   const [update, setUpdate] = useState(0);
-  const [totalCommentVotes, setTotalCommentVotes] = useState(0);
+  const [totalCommentVotes, setTotalCommentVotes] = useState<null | number>(
+    null,
+  );
 
   useEffect(() => {
     async function fetchData() {
+      // get the comments total votes
+      let totalVotesData = await supabase
+        .from("user_comment_vote")
+        .select("user_vote")
+        .eq("comment_id", commentId);
+
+      if (totalVotesData.data && totalVotesData.data.length > 0) {
+        const totalVotes = totalVotesData.data.reduce(
+          (sum, user_vote) => sum + user_vote.user_vote,
+          0,
+        );
+        setTotalCommentVotes(totalVotes);
+      } else if (totalVotesData.data?.length === 0) {
+        setTotalCommentVotes(0);
+      }
+
       // get current user vote
+      if (!userId) return;
       const [voteData] = await Promise.all([
         supabase
           .from("user_comment_vote")
           .select("user_vote")
           .match({ voter_id: userId, comment_id: commentId }),
       ]);
+
+      if (voteData.data?.length === 0) {
+        setCurrentUserVote(0);
+      }
 
       if (voteData.data && voteData.data[0]) {
         setCurrentUserVote(voteData.data[0].user_vote);
@@ -33,40 +63,22 @@ export function CommentVotes({ commentId, userId }: CommentVotesProps) {
       if (voteData.error) {
         console.error(voteData.error);
       }
-
-      // get the comments total votes
-      const totalVotesData = await supabase
-        .from("user_comment_vote")
-        .select("user_vote")
-        .eq("comment_id", commentId);
-
-      if (totalVotesData.data && totalVotesData.data.length > 0) {
-        const totalVotes = totalVotesData.data.reduce(
-          (sum, user_vote) => sum + user_vote.user_vote,
-          0
-        );
-        setTotalCommentVotes(totalVotes);
-      }
-
-      if (totalVotesData.error) {
-        console.error(totalVotesData.error);
-      }
     }
 
     fetchData();
-  }, [update]);
+  }, [update, userId]);
 
   function handleUpvote() {
     // temp set before validation
     setCurrentUserVote(1);
     // temp set before validation
-    setTotalCommentVotes(totalCommentVotes + 1);
+    setTotalCommentVotes(totalCommentVotes! + 1);
     handleUpdateVote(1);
   }
 
   function handleDownvote() {
     // temp set before validation
-    setTotalCommentVotes(totalCommentVotes - 1);
+    setTotalCommentVotes(totalCommentVotes! - 1);
     // temp set before validation
     setCurrentUserVote(-1);
     handleUpdateVote(-1);
@@ -87,23 +99,43 @@ export function CommentVotes({ commentId, userId }: CommentVotesProps) {
     setUpdate(update + 1);
   }
 
-  return (
-    <div>
-      <p>votes: &nbsp;{totalCommentVotes}</p>
-      {userId && (
-        <div className="flex gap-3">
-          <Button
-            onClick={currentUserVote === 1 ? handleRemoveVote : handleUpvote}
-          >
-            {currentUserVote === 1 ? "remove vote" : "Upvote"}
-          </Button>
-          <Button
-            onClick={currentUserVote === -1 ? handleRemoveVote : handleDownvote}
-          >
-            {currentUserVote === -1 ? "remove vote" : "Downvote"}
-          </Button>
-        </div>
-      )}
-    </div>
-  );
+  if (totalCommentVotes !== null && currentUserVote !== null)
+    return (
+      <div className="flex gap-2">
+        {currentUserVote === 1 ? (
+          <BiSolidChevronUpCircle
+            onClick={handleRemoveVote}
+            className="text-lg hover:cursor-pointer "
+          />
+        ) : (
+          <BiChevronUpCircle
+            className="text-lg hover:cursor-pointer hover:text-green-600"
+            onClick={handleUpvote}
+          />
+        )}
+        <span className="text-sm">{totalCommentVotes}</span>
+        {currentUserVote === -1 ? (
+          <BiSolidChevronDownCircle
+            onClick={handleRemoveVote}
+            className="text-lg hover:cursor-pointer "
+          />
+        ) : (
+          <BiChevronDownCircle
+            className="text-lg hover:cursor-pointer hover:text-red-600"
+            onClick={handleDownvote}
+          />
+        )}
+      </div>
+    );
+
+  if (!userId && totalCommentVotes !== null)
+    return (
+      <div className="flex gap-2">
+        <BiChevronUpCircle className="text-lg hover:cursor-pointer hover:text-green-600" />
+        <span className="text-sm">{totalCommentVotes}</span>
+        <BiChevronDownCircle className="text-lg hover:cursor-pointer hover:text-red-600" />
+      </div>
+    );
+
+  return <Skeleton className="h-[20px] w-[50px] rounded-sm bg-neutral-200" />;
 }
