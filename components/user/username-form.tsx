@@ -22,11 +22,13 @@ export function UsernameForm({ userId }: UsernameForm) {
 
   function handleUserSubmit() {
     async function Submit() {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("user_profile")
         .insert([{ id: userId, username: userInput }])
         .select();
+      if (data) console.log(data);
     }
+
     Submit();
   }
 
@@ -36,7 +38,7 @@ export function UsernameForm({ userId }: UsernameForm) {
         Welcome! Just a few more steps to set up your profile!
       </p>
       <p className="mt-5">Choose your username!</p>
-      <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
+      <div className="mt-3 grid w-full max-w-sm items-center gap-1.5">
         <Label htmlFor="username">Username</Label>
         <Input
           className="text-black"

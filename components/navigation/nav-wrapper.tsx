@@ -4,11 +4,15 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "../ui/collapsible";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import {
+  User,
+  createServerComponentClient,
+} from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import LogoutButton from "../LogoutButton";
 import { buttonVariants } from "../ui/button";
 import { fetchUser } from "@/lib/utils";
+import { Search } from "../search/search";
 
 export async function NavWrapper() {
   const supabase = createServerComponentClient({ cookies }); // get supabase
@@ -27,7 +31,7 @@ export async function NavWrapper() {
     <div>
       <nav className="py-2 shadow-lg ">
         <div className="container mx-auto px-4 md:px-8 ">
-          <div className=" flex justify-between">
+          <div className=" grid grid-cols-3">
             {/* <!-- Primary Navbar items --> */}
             <div className="hidden items-center space-x-10 md:flex">
               <Link className="border-0 text-neutral-200" href="/">
@@ -43,18 +47,23 @@ export async function NavWrapper() {
                 Profile
               </Link>
             </div>
-            {/* <!-- Secondary Navbar items --> */}
-            <div className="hidden items-center space-x-3 md:flex ">
-              {logBtn}
+            <div className="">
+              <div>
+                <Search />
+              </div>
             </div>
+
+            {/* <!-- Secondary Navbar items --> */}
+            <div className="hidden  justify-end md:flex">{logBtn}</div>
             {/* <!-- Mobile menu button --> */}
-            <div className="flex h-12 w-full items-center justify-end md:hidden">
+            <div className="flex h-12 w-full  items-center justify-end  md:hidden">
               <Collapsible>
                 <div className="flex justify-end ">
                   <CollapsibleTrigger>
                     <div className="mobile-menu-button outline-none">
                       <svg
                         className="h-6 w-6 text-gray-500 hover:text-green-500"
+                        // eslint-disable-next-line react/no-unknown-property
                         x-show="!showMenu"
                         fill="none"
                         strokeLinecap="round"
@@ -98,11 +107,7 @@ export async function NavWrapper() {
   );
 }
 
-interface UserProps {
-  user: any;
-}
-
-export async function LoginLogout({ user }: UserProps) {
+export async function LoginLogout({ user }: { user: User }) {
   if (user)
     return (
       <div className="flex items-center gap-4">

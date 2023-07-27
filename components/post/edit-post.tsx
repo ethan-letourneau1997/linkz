@@ -24,11 +24,14 @@ export function EditPost({ post }: EditPostProps) {
 
   // update post  post
   async function handleUpdatePost() {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("post")
       .update({ post_content: postContent })
       .eq("id", post.id)
       .select();
+    if (error) {
+      return;
+    }
   }
 
   // save post

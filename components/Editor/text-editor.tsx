@@ -11,6 +11,7 @@ import { useState } from "react";
 
 interface TextEditorProps {
   content: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   updateHTML: any;
 }
 
@@ -30,9 +31,9 @@ export function TextEditor({ updateHTML, content }: TextEditorProps) {
   });
 
   // html state
-  const [html, setHTML] = useState(content || "");
+  const [, setHTML] = useState(content || "");
 
-  editor?.on("update", ({ editor }) => {
+  editor?.on("update", () => {
     handleHTMLChange();
   });
 

@@ -13,7 +13,7 @@ interface UserProps {
 export async function VoteCount({ postId, vote_table }: GetVoteCountProps) {
   const supabase = createServerComponentClient({ cookies }); // get supabase
 
-  let { data: user_votes, error } = await supabase
+  const { data: user_votes } = await supabase
     .from(vote_table)
     .select("user_vote")
     .eq("post_id", postId);
@@ -36,7 +36,7 @@ async function calculateVotes(user_votes: UserProps[] | null) {
     // If there is more than one vote, add and return the total
     const totalVotes = votesArray.reduce(
       (accumulator: number, currentValue: number) => accumulator + currentValue,
-      0
+      0,
     );
 
     if (votesArray.length > 1) {

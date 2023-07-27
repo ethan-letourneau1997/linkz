@@ -8,15 +8,15 @@ interface CommentReplyProps {
   userId: string;
   parentId: number | null;
   rootPostId: number;
-  refresh: any;
+  // refresh: any;
 }
 
 export function CommentReply({
   userId,
   parentId,
   rootPostId,
-  refresh,
-}: CommentReplyProps) {
+} // refresh,
+: CommentReplyProps) {
   const supabase = createClientComponentClient(); // Create a Supabase client configured to use cookies
 
   const [showInput, setShowInput] = useState(false);
@@ -33,7 +33,7 @@ export function CommentReply({
   };
 
   async function handlePostReply() {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("comment")
       .insert([
         {
@@ -44,8 +44,9 @@ export function CommentReply({
         },
       ])
       .select();
+    if (error) return;
 
-    refresh();
+    // refresh();
     setShowInput(false);
   }
 
@@ -55,7 +56,7 @@ export function CommentReply({
         <>
           <TextEditor content={replyContent} updateHTML={updateReplyContent} />
           <button
-            className="px-3 py-1 mt-4 mb-6 border hover:bg-white hover:text-black"
+            className="mb-6 mt-4 border px-3 py-1 hover:bg-white hover:text-black"
             onClick={handlePostReply}
           >
             Post Reply
@@ -64,7 +65,7 @@ export function CommentReply({
       )}
       <button
         onClick={handleShowInput}
-        className="px-3 py-1 mt-4 mb-6 border hover:bg-white hover:text-black"
+        className="mb-6 mt-4 border px-3 py-1 hover:bg-white hover:text-black"
       >
         {showInput ? "cancel" : "reply"}
       </button>

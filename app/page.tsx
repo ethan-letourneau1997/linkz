@@ -8,27 +8,26 @@ async function fetchUserProfile() {
 
   const user = await fetchUser(supabase); // get user
 
-  let username = "";
-  let error = null;
+  async function fetchUserProfile() {
+    if (user) {
+      const { data } = await supabase
+        .from("user_profile")
+        .select("*")
+        .eq("id", user.id)
+        .limit(1)
+        .single();
 
-  if (user) {
-    const { data, error: profileError } = await supabase
-      .from("user_profile")
-      .select("*")
-      .eq("id", user.id)
-      .limit(1)
-      .single();
-
-    if (data && data.username) {
-      username = data.username;
+      if (data && data.username) {
+        return data.username;
+      }
     }
-
-    error = profileError;
   }
+
+  const username = await fetchUserProfile();
 
   if (user && username) {
     return (
-      <div>
+      <div className="mt-5">
         <p className="text-center text-3xl font-semibold">Hello, {username}!</p>
         <p className="mt-4 text-center text-2xl">start exploring!</p>
       </div>

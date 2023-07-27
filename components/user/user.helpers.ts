@@ -2,12 +2,12 @@ import { SupabaseClient, User } from "@supabase/supabase-js";
 
 export interface fetchProfileProps {
   user: User;
-  supabase: SupabaseClient<any, "public", any>;
+  supabase: SupabaseClient;
 }
 
 export async function fetchUsername({ user, supabase }: fetchProfileProps) {
   if (user) {
-    const { data, error: profileError } = await supabase
+    const { data } = await supabase
       .from("user_profile")
       .select("*")
       .match({ id: user.id })
@@ -24,7 +24,7 @@ export async function fetchCreatedCommunities({
   supabase,
 }: fetchProfileProps) {
   if (user) {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("community")
       .select("*")
       .eq("creator_user_id", user.id);
@@ -38,7 +38,7 @@ export async function fetchUserSubscriptions({
   supabase,
 }: fetchProfileProps) {
   if (user) {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("user_community")
       .select("community(id, community_name, community_description)")
       .eq("user_id", user.id);
@@ -49,7 +49,7 @@ export async function fetchUserSubscriptions({
 
 export async function fetchUserPosts({ user, supabase }: fetchProfileProps) {
   if (user) {
-    const { data: posts, error } = await supabase
+    const { data: posts } = await supabase
       .from("post")
       .select(
         "created_at, id, post_content, post_title, community_id(community_name), is_image",

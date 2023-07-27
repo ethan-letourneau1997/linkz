@@ -1,17 +1,15 @@
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import {
+  SupabaseClient,
+  createServerComponentClient,
+} from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { buttonVariants } from "../ui/button";
-import { fetchUser } from "@/lib/utils";
 
 export default async function AllCommunities() {
   // get supabase
   const supabase = createServerComponentClient({ cookies });
 
-  let { data: communities } = await supabase.from("community").select("*");
-
-  // get user
-  const user = await fetchUser(supabase); // get user
+  const { data: communities } = await supabase.from("community").select("*");
 
   return (
     <div className="max-w-[800px] ">
@@ -20,7 +18,7 @@ export default async function AllCommunities() {
       <div className="space-y-2">
         {communities &&
           communities.map((community) => (
-            <div>
+            <div key={community.id}>
               <Community community={community} supabase={supabase} />
             </div>
           ))}
@@ -45,11 +43,11 @@ interface Community {
     community_name: string;
     community_description: string;
   };
-  supabase: any;
+  supabase: SupabaseClient;
 }
 
 async function Community({ community, supabase }: Community) {
-  let { data: user_community, error } = await supabase
+  const { data: user_community } = await supabase
     .from("user_community")
     .select("*")
     .eq("community_id", community.id);

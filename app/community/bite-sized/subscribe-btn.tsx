@@ -2,7 +2,7 @@
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useEffect, useState } from "react";
-import { revalidatePath } from "next/cache";
+
 import { Button } from "@/components/ui/button";
 
 interface SubscribeBtnProps {
@@ -21,7 +21,7 @@ export default function SubscribeBtn({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let { data, error } = await supabase
+        const { data, error } = await supabase
           .from("user_community")
           .select("community(id, community_name)")
           .match({ user_id: userId, community_id: communityId });
@@ -45,7 +45,7 @@ export default function SubscribeBtn({
 
   // subscribe user to community
   async function handleSubscribe() {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("user_community")
       .insert([{ user_id: userId, community_id: communityId }])
       .select();
@@ -69,14 +69,13 @@ export default function SubscribeBtn({
   return (
     <>
       {isSubscribed ? (
-        // <Button
-        //   onClick={handleUnsubscribe}
-        //   className=" h-6  px-2 text-xs"
-        //   variant="secondary"
-        // >
-        //   unsubscribe
-        // </Button>
-        <span className="my-auto text-sm text-neutral-400">unsubscribe</span>
+        <Button
+          onClick={handleUnsubscribe}
+          className=" h-6  px-2 text-xs"
+          variant="ghost"
+        >
+          unsubscribe
+        </Button>
       ) : null}
       {isSubscribed === false ? (
         <Button

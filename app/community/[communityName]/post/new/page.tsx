@@ -1,7 +1,7 @@
 import { CreatePost } from "@/components/create/create-post";
 import { fetchUser } from "@/lib/utils";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { data } from "autoprefixer";
+
 import { cookies } from "next/headers";
 
 interface IndexProps {
@@ -16,7 +16,7 @@ export default async function Index({ params }: IndexProps) {
   const supabase = createServerComponentClient({ cookies }); // get supabase
 
   // get community details
-  let { data: community, error } = await supabase
+  const { data: community } = await supabase
     .from("community")
     .select("*")
     .eq("community_name", communityName);

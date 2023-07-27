@@ -16,7 +16,6 @@ import {
   triggerNotification,
 } from "../notifications/notification";
 import { Button } from "../ui/button";
-import { Label } from "../ui/label";
 
 interface CreatePostProps {
   communityId: string;
@@ -30,15 +29,13 @@ export function CreatePost({ communityId, userId }: CreatePostProps) {
 
   const [postContent, setPostContent] = useState("");
   const [postTitle, setPostTitle] = useState("");
-  const [file, setFile] = useState<any>(null);
-
-  console.log(file);
+  const [file, setFile] = useState<File | null>(null);
 
   const updatePostContent = (newValue: SetStateAction<string>) => {
     setPostContent(newValue);
   };
 
-  const handlePostTitleChange = (event: any) => {
+  const handlePostTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setPostTitle(event.target.value);
   };
 
@@ -122,7 +119,7 @@ export function CreatePost({ communityId, userId }: CreatePostProps) {
   };
 
   const postImage = async (imageElementString: string) => {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("post")
       .insert([
         {

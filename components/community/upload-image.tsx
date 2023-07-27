@@ -1,15 +1,11 @@
 "use client";
 import { fetchUser } from "@/lib/utils";
-import {
-  createClientComponentClient,
-  createServerComponentClient,
-} from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
-import { useEffect, useState } from "react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { ChangeEvent, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export function UploadImage() {
-  const [file, setFile] = useState([]);
+  const [file, setFile] = useState<File | undefined>(undefined);
 
   const supabase = createClientComponentClient(); // Create a Supabase client configured to use cookies
 
@@ -47,8 +43,9 @@ export function UploadImage() {
     }
   };
 
-  const handleFileSelected = (e) => {
-    setFile(e.target.files[0]);
+  const handleFileSelected = (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    setFile(selectedFile);
   };
 
   function uploadImage(imagePath: string) {
@@ -68,7 +65,7 @@ export function UploadImage() {
     postImage();
 
     async function postImage() {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("post")
         .insert([
           {
@@ -80,6 +77,8 @@ export function UploadImage() {
           },
         ])
         .select();
+
+      if (error) return;
     }
 
     // save string as new post

@@ -1,12 +1,15 @@
 "use client";
 
 import { fetchUser } from "@/lib/utils";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import {
+  User,
+  createClientComponentClient,
+} from "@supabase/auth-helpers-nextjs";
 import React, { useEffect, useState } from "react";
 
 export default function CreateCommunity() {
   // user state
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   // community info states
   const [communityName, setCommunityName] = useState("");
   const [communityDescription, setCommunityDescription] = useState("");
@@ -18,6 +21,7 @@ export default function CreateCommunity() {
   useEffect(() => {
     const getUser = async () => {
       const user = await fetchUser(supabase); // get user
+      setUser(user);
     };
 
     getUser();
@@ -37,18 +41,20 @@ export default function CreateCommunity() {
 
   // create a new community
   async function handleCreateCommunity() {
-    const { data, error } = await supabase
-      .from("community")
-      .insert([
-        {
-          community_name: communityName,
-          community_description: communityDescription,
-          creator_user_id: user!.id,
-        },
-      ])
-      .select();
+    if (user) {
+      const { error } = await supabase
+        .from("community")
+        .insert([
+          {
+            community_name: communityName,
+            community_description: communityDescription,
+            creator_user_id: user.id,
+          },
+        ])
+        .select();
 
-    if (error) console.log(error);
+      if (error) return;
+    }
   }
 
   return (

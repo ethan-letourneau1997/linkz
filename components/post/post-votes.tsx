@@ -3,7 +3,6 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { GetVoteCount } from "./get-vote-count";
 
 interface PostVotesProps {
   postId: string;
@@ -44,7 +43,7 @@ export function PostVotes({ postId, userId }: PostVotesProps) {
       if (totalVotesData.data && totalVotesData.data.length > 0) {
         const totalVotes = totalVotesData.data.reduce(
           (sum, vote) => sum + vote.user_vote,
-          0
+          0,
         );
         setTotalPostVotes(totalVotes);
       }
@@ -71,13 +70,14 @@ export function PostVotes({ postId, userId }: PostVotesProps) {
   }
 
   async function handleUpdateVote(voteValue: number) {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("user_post_vote")
       .upsert({ voter_id: userId, post_id: postId, user_vote: voteValue })
       .select();
-    if (error) console.log(error);
 
-    setUpdate(update + 1);
+    if (data) {
+      setUpdate(update + 1);
+    }
   }
 
   return (

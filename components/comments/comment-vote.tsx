@@ -2,7 +2,6 @@
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
 import {
   BiChevronDownCircle,
   BiChevronUpCircle,
@@ -28,7 +27,7 @@ export function CommentVotes({ commentId, userId }: CommentVotesProps) {
   useEffect(() => {
     async function fetchData() {
       // get the comments total votes
-      let totalVotesData = await supabase
+      const totalVotesData = await supabase
         .from("user_comment_vote")
         .select("user_vote")
         .eq("comment_id", commentId);
@@ -91,12 +90,13 @@ export function CommentVotes({ commentId, userId }: CommentVotesProps) {
   }
 
   async function handleUpdateVote(voteValue: number) {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("user_comment_vote")
       .upsert({ comment_id: commentId, voter_id: userId, user_vote: voteValue })
       .select();
-
-    setUpdate(update + 1);
+    if (data) {
+      setUpdate(update + 1);
+    }
   }
 
   if (totalCommentVotes !== null && currentUserVote !== null)

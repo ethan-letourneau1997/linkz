@@ -1,6 +1,4 @@
 import Community from "@/components/community/community";
-import dynamic from "next/dynamic.js";
-import { Suspense } from "react";
 
 interface IndexProps {
   params: {

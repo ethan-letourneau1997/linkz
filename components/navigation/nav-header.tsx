@@ -1,16 +1,18 @@
 "use client";
-
 import { Navbar } from "flowbite-react";
-import { Button, buttonVariants } from "../ui/button";
+import { buttonVariants } from "../ui/button";
 import LogoutButton from "../LogoutButton";
 import Link from "next/link";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import {
+  User,
+  createClientComponentClient,
+} from "@supabase/auth-helpers-nextjs";
 import { useEffect, useState } from "react";
 import { fetchUser } from "@/lib/utils";
 
 export function NavHeader() {
   const supabase = createClientComponentClient();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [logBtn, setLogBtn] = useState<React.ReactNode>();
   // get user
   useEffect(() => {
@@ -20,7 +22,7 @@ export function NavHeader() {
         setLogBtn(
           <div className="flex items-center gap-4">
             <LogoutButton />
-          </div>
+          </div>,
         );
         setUser(user);
       } else {
@@ -30,7 +32,7 @@ export function NavHeader() {
             className={buttonVariants({ variant: "outline" })}
           >
             Login
-          </Link>
+          </Link>,
         );
       }
       if (user) setUser(user);
@@ -41,7 +43,7 @@ export function NavHeader() {
 
   return (
     <Navbar fluid className=" bg-neutral-950">
-      <div className="flex justify-end w-full">
+      <div className="flex w-full justify-end">
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse className="mt-1 dark:bg-neutral-950 ">
@@ -74,21 +76,17 @@ export function NavHeader() {
   );
 }
 
-interface UserProps {
-  user: any;
-}
-
-function LoginLogout({ user }: UserProps) {
-  if (user)
-    return (
-      <div className="flex items-center gap-4">
-        <LogoutButton />
-      </div>
-    );
-  else if (user !== null)
-    return (
-      <Link href="/login" className={buttonVariants({ variant: "outline" })}>
-        Login
-      </Link>
-    );
-}
+// function LoginLogout({ user }: UserProps) {
+//   if (user)
+//     return (
+//       <div className="flex items-center gap-4">
+//         <LogoutButton />
+//       </div>
+//     );
+//   else if (user !== null)
+//     return (
+//       <Link href="/login" className={buttonVariants({ variant: "outline" })}>
+//         Login
+//       </Link>
+//     );
+// }

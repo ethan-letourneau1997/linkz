@@ -14,7 +14,7 @@ export function GetVoteCount({ postId, vote_table }: GetVoteCountProps) {
 
   useEffect(() => {
     async function getVotes() {
-      let { data: user_votes, error } = await supabase
+      const { data: user_votes } = await supabase
         .from(vote_table)
         .select("user_vote")
         .eq("post_id", postId);

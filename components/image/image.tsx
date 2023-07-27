@@ -10,13 +10,13 @@ export async function RenderImage() {
   let imageUrl;
 
   if (user) {
-    let { data: user_image } = await supabase
+    const { data: user_image } = await supabase
       .from("user_image")
       .select("*")
       .match({ user_id: user.id })
       .limit(1)
       .single();
-    if (user_image) console.log(user_image.image_path);
+
     const imagePath = user_image.image_path;
 
     const { data } = supabase.storage.from("Images").getPublicUrl(imagePath);
