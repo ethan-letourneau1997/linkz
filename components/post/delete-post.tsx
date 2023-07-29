@@ -1,14 +1,10 @@
 "use client";
 
+import { Post } from "@/types/types";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 interface EditPostProps {
-  post: {
-    id: number;
-    post_content: string;
-    post_title: string;
-    posting_user_id: string;
-  };
+  post: Post;
 }
 
 export function DeletePost({ post }: EditPostProps) {

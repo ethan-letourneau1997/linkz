@@ -10,13 +10,12 @@ import {
   createClientComponentClient,
 } from "@supabase/auth-helpers-nextjs";
 import { fetchUser } from "@/lib/utils";
-import { CommentVotes } from "./comment-vote";
-import { Database } from "@/types/supabase";
-
-type CommentProps = Database["public"]["Views"]["post_comments"]["Row"];
+import { CommentVotes } from "../votes/comment-votes";
+import { ClientNoUserVotes } from "./client-no-user-votes";
+import { CommentTree } from "@/types/types";
 
 interface CommentCollapseProps {
-  comment: CommentProps;
+  comment: CommentTree;
   children: React.ReactNode;
 }
 
@@ -56,11 +55,10 @@ export function CommentCollapse({ comment, children }: CommentCollapseProps) {
               />
             )}
 
-            {comment.comment_id && (
-              <CommentVotes
-                commentId={comment.comment_id}
-                userId={user ? user.id : null}
-              />
+            {user ? (
+              <CommentVotes user={user} commentId={comment.comment_id!} />
+            ) : (
+              <ClientNoUserVotes Id={comment.comment_id!} type="comment" />
             )}
 
             <div className="mt-3">{children}</div>
@@ -71,7 +69,7 @@ export function CommentCollapse({ comment, children }: CommentCollapseProps) {
 }
 
 interface CommentHeaderProps {
-  comment: CommentProps;
+  comment: CommentTree;
 }
 
 function CommentCollapseHeader({ comment }: CommentHeaderProps) {

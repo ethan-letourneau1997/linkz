@@ -5,15 +5,10 @@ import { useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { TextEditor } from "../editor/text-editor";
 import { DeletePost } from "./delete-post";
+import { Post } from "@/types/types";
 
 interface EditPostProps {
-  post: {
-    id: number;
-    post_content: string;
-    post_title: string;
-    posting_user_id: string;
-    is_image: boolean;
-  };
+  post: Post;
 }
 
 export function EditPost({ post }: EditPostProps) {

@@ -48,7 +48,7 @@ export default async function UserProfile() {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="posts" className="mx-auto mb-3 max-w-[800px] ">
-            <UserPosts user={user} />
+            <UserPosts userProfile={user} />
           </TabsContent>
           <TabsContent
             value="communities"

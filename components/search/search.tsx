@@ -3,15 +3,13 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 
-import { Database } from "@/types/supabase";
 import Link from "next/link";
-
-type Community = Database["public"]["Views"]["community_sub_count"]["Row"];
+import { CommunitySubCount } from "@/types/types";
 
 export function Search() {
   const supabase = createClientComponentClient(); // Create a Supabase client
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<Community[]>([]);
+  const [searchResults, setSearchResults] = useState<CommunitySubCount[]>([]);
   const [visible, setVisible] = useState(false);
   const blurTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
@@ -50,7 +48,7 @@ export function Search() {
   };
 
   return (
-    <div className="flex ">
+    <div className="hidden md:flex">
       <div className="relative w-full">
         <div className="flex">
           <input

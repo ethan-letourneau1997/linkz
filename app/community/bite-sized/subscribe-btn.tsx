@@ -4,11 +4,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-
-interface SubscribeBtnProps {
-  userId: string;
-  communityId: string;
-}
+import { SubscribeBtnProps } from "@/types/types";
 
 export default function SubscribeBtn({
   userId,

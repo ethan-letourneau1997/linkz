@@ -4,20 +4,25 @@ import { User } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { AspectRatio } from "../../ui/aspect-ratio";
+import { fetchUser } from "@/lib/utils";
+import { PostVotes } from "@/components/votes/post-votes";
+import { NoUserVotes } from "@/components/votes/no-user-votes";
 
-async function getUserPosts(user: User) {
+export async function UserPosts({ userProfile }: { userProfile: User }) {
   const supabase = createServerComponentClient({ cookies });
-  if (user) {
-    const { data: posts } = await supabase
-      .from("user_posts")
-      .select("*")
-      .eq("posting_user_id", user.id);
-    if (posts) return posts;
-  }
-}
+  const user = await fetchUser(supabase);
 
-export async function UserPosts({ user }: { user: User }) {
-  const userPosts = await getUserPosts(user);
+  async function getUserPosts() {
+    if (userProfile) {
+      const { data: posts } = await supabase
+        .from("user_posts")
+        .select("*")
+        .eq("posting_user_id", userProfile.id);
+      if (posts) return posts;
+    }
+  }
+
+  const userPosts = await getUserPosts();
 
   if (userPosts && userPosts.length > 0)
     return (
@@ -25,15 +30,15 @@ export async function UserPosts({ user }: { user: User }) {
         <div className="space-y-2">
           {userPosts?.map((post) => (
             <div className="bg-neutral-50 px-4 py-3" key={post.id}>
-              <span className=" = text-neutral-600">{post.community_name}</span>
-
-              <span className="= ml-2 text-neutral-500">
-                {getTimeSinceNow({
-                  originalTime: post.created_at,
-                  short: true,
-                })}
-              </span>
-
+              <div>
+                <span className="">{post.community_name}</span>
+                &nbsp;&#8226;&nbsp;
+                <span className="text-sm text-neutral-500">
+                  {getTimeSinceNow({
+                    originalTime: post.created_at,
+                  })}
+                </span>
+              </div>
               <div className="mt-1 space-y-1" key={post.id}>
                 <Link
                   className="mt-4  text-base font-medium text-neutral-900 sm:text-lg"
@@ -78,6 +83,15 @@ export async function UserPosts({ user }: { user: User }) {
                       dangerouslySetInnerHTML={{ __html: post.post_content }}
                     />
                   )}
+                </div>
+                <div>
+                  <div className="mt-1">
+                    {user ? (
+                      <PostVotes user={user} postId={post.post_id} />
+                    ) : (
+                      <NoUserVotes type="post" Id={post.post_id} />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

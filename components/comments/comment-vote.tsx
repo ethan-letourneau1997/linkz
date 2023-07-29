@@ -2,20 +2,20 @@
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useEffect, useState } from "react";
-import {
-  BiChevronDownCircle,
-  BiChevronUpCircle,
-  BiSolidChevronDownCircle,
-  BiSolidChevronUpCircle,
-} from "react-icons/bi";
-import { Skeleton } from "../ui/skeleton";
+
+import { BsTriangleFill, BsTriangle } from "react-icons/bs";
 
 interface CommentVotesProps {
-  commentId: number;
-  userId: string | null;
+  postOrCommentId: number | null;
+  userId: string;
+  isComment?: boolean;
 }
 
-export function CommentVotes({ commentId, userId }: CommentVotesProps) {
+export function CommentVotes({
+  postOrCommentId,
+  userId,
+  isComment,
+}: CommentVotesProps) {
   const supabase = createClientComponentClient(); // Create a Supabase client configured to use cookies
 
   const [currentUserVote, setCurrentUserVote] = useState<null | number>(null);
@@ -25,12 +25,12 @@ export function CommentVotes({ commentId, userId }: CommentVotesProps) {
   );
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchCommentData() {
       // get the comments total votes
       const totalVotesData = await supabase
         .from("user_comment_vote")
         .select("user_vote")
-        .eq("comment_id", commentId);
+        .eq("comment_id", postOrCommentId);
 
       if (totalVotesData.data && totalVotesData.data.length > 0) {
         const totalVotes = totalVotesData.data.reduce(
@@ -43,12 +43,11 @@ export function CommentVotes({ commentId, userId }: CommentVotesProps) {
       }
 
       // get current user vote
-      if (!userId) return;
       const [voteData] = await Promise.all([
         supabase
           .from("user_comment_vote")
           .select("user_vote")
-          .match({ voter_id: userId, comment_id: commentId }),
+          .match({ voter_id: userId, comment_id: postOrCommentId }),
       ]);
 
       if (voteData.data?.length === 0) {
@@ -58,13 +57,48 @@ export function CommentVotes({ commentId, userId }: CommentVotesProps) {
       if (voteData.data && voteData.data[0]) {
         setCurrentUserVote(voteData.data[0].user_vote);
       }
+      if (voteData.error) {
+        console.error(voteData.error);
+      }
+    }
+    async function fetchPostData() {
+      // get the post total votes
+      const totalVotesData = await supabase
+        .from("user_post_vote")
+        .select("user_vote")
+        .eq("post_id", postOrCommentId);
 
+      if (totalVotesData.data && totalVotesData.data.length > 0) {
+        const totalVotes = totalVotesData.data.reduce(
+          (sum, user_vote) => sum + user_vote.user_vote,
+          0,
+        );
+        setTotalCommentVotes(totalVotes);
+      } else if (totalVotesData.data?.length === 0) {
+        setTotalCommentVotes(0);
+      }
+
+      // get current user vote
+      const [voteData] = await Promise.all([
+        supabase
+          .from("user_post_vote")
+          .select("user_vote")
+          .match({ voter_id: userId, post_id: postOrCommentId }),
+      ]);
+
+      if (voteData.data?.length === 0) {
+        setCurrentUserVote(0);
+      }
+
+      if (voteData.data && voteData.data[0]) {
+        setCurrentUserVote(voteData.data[0].user_vote);
+      }
       if (voteData.error) {
         console.error(voteData.error);
       }
     }
 
-    fetchData();
+    isComment ? fetchCommentData() : fetchPostData();
   }, [update, userId]);
 
   function handleUpvote() {
@@ -90,52 +124,79 @@ export function CommentVotes({ commentId, userId }: CommentVotesProps) {
   }
 
   async function handleUpdateVote(voteValue: number) {
-    const { data } = await supabase
-      .from("user_comment_vote")
-      .upsert({ comment_id: commentId, voter_id: userId, user_vote: voteValue })
-      .select();
-    if (data) {
-      setUpdate(update + 1);
+    if (isComment) {
+      const { data } = await supabase
+        .from("user_comment_vote")
+        .upsert({
+          comment_id: postOrCommentId,
+          voter_id: userId,
+          user_vote: voteValue,
+        })
+        .select();
+      if (data) {
+        setUpdate(update + 1);
+      }
+    } else {
+      const { data } = await supabase
+        .from("user_post_vote")
+        .upsert({
+          post_id: postOrCommentId,
+          voter_id: userId,
+          user_vote: voteValue,
+        })
+        .select();
+      if (data) {
+        setUpdate(update + 1);
+      }
     }
   }
 
   if (totalCommentVotes !== null && currentUserVote !== null)
     return (
-      <div className="flex gap-2">
+      <div className="flex gap-1">
         {currentUserVote === 1 ? (
-          <BiSolidChevronUpCircle
+          <BsTriangleFill
             onClick={handleRemoveVote}
-            className="text-lg hover:cursor-pointer "
+            className="my-auto hover:cursor-pointer"
+            size={15}
           />
         ) : (
-          <BiChevronUpCircle
-            className="text-lg hover:cursor-pointer hover:text-green-600"
+          <BsTriangle
+            className="my-auto text-lg hover:cursor-pointer hover:text-green-600"
             onClick={handleUpvote}
+            size={15}
           />
         )}
         <span className="text-sm">{totalCommentVotes}</span>
         {currentUserVote === -1 ? (
-          <BiSolidChevronDownCircle
+          <BsTriangleFill
             onClick={handleRemoveVote}
-            className="text-lg hover:cursor-pointer "
+            className="my-auto rotate-180 text-lg hover:cursor-pointer"
+            size={15}
           />
         ) : (
-          <BiChevronDownCircle
-            className="text-lg hover:cursor-pointer hover:text-red-600"
+          <BsTriangle
+            className="my-auto rotate-180 text-lg hover:cursor-pointer hover:text-red-600"
             onClick={handleDownvote}
+            size={15}
           />
         )}
       </div>
     );
 
-  if (!userId && totalCommentVotes !== null)
-    return (
-      <div className="flex gap-2">
-        <BiChevronUpCircle className="text-lg hover:cursor-pointer hover:text-green-600" />
-        <span className="text-sm">{totalCommentVotes}</span>
-        <BiChevronDownCircle className="text-lg hover:cursor-pointer hover:text-red-600" />
-      </div>
-    );
-
-  return <Skeleton className="h-[20px] w-[50px] rounded-sm bg-neutral-200" />;
+  return (
+    <div className="flex gap-1">
+      <BsTriangle
+        className="my-auto text-lg hover:cursor-pointer hover:text-green-600"
+        onClick={handleUpvote}
+        size={15}
+      />
+      <span className="text-sm">0</span>
+      <BsTriangle
+        className="my-auto rotate-180 text-lg hover:cursor-pointer hover:text-red-600"
+        onClick={handleDownvote}
+        size={15}
+      />
+    </div>
+  );
 }

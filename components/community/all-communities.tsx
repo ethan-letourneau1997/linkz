@@ -1,3 +1,4 @@
+import { Community as CommunityProps } from "@/types/types";
 import {
   SupabaseClient,
   createServerComponentClient,
@@ -38,11 +39,7 @@ export default async function AllCommunities() {
 }
 
 interface Community {
-  community: {
-    id: number;
-    community_name: string;
-    community_description: string;
-  };
+  community: CommunityProps;
   supabase: SupabaseClient;
 }
 

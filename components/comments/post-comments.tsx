@@ -1,9 +1,7 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { CommentCollapse } from "./comment-collapse";
-import { Database } from "@/types/supabase";
-
-type PostComments = Database["public"]["Views"]["post_comments"]["Row"][];
+import { CommentTree } from "@/types/types";
 
 interface PostCommentsProps {
   postId: number;
@@ -14,15 +12,14 @@ export async function PostComments({ postId }: PostCommentsProps) {
 
   async function getComments() {
     const { data } = await supabase
-      .from("post_comments")
+      .from("comment_tree")
       .select("*")
       .eq("root_post", postId);
-
     if (data) return data;
   }
 
   async function renderComments(
-    comments: PostComments,
+    comments: CommentTree[],
     parentCommentId: number | null = null,
   ) {
     if (!comments) return;

@@ -11,7 +11,6 @@ export async function fetchUsername({ user, supabase }: fetchProfileProps) {
       .from("user_profile")
       .select("*")
       .match({ id: user.id })
-
       .limit(1)
       .single();
 

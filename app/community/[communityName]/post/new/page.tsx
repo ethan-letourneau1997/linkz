@@ -4,13 +4,13 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 
 import { cookies } from "next/headers";
 
-interface IndexProps {
+export interface CommunityIndexProps {
   params: {
     communityName: string;
   };
 }
 
-export default async function Index({ params }: IndexProps) {
+export default async function Index({ params }: CommunityIndexProps) {
   const communityName = params.communityName; // Extract the communityName from params
 
   const supabase = createServerComponentClient({ cookies }); // get supabase

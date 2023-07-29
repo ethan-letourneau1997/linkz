@@ -9,22 +9,27 @@ import { VoteCount } from "./vote-count";
 import { getTimeSinceNow } from "@/lib/time_since";
 import { PostComments } from "../comments/post-comments";
 import { Suspense } from "react";
-
-async function getPostDetails(postId: number) {
-  const supabase = createServerComponentClient({ cookies }); // get supabase
-  const { data: post } = await supabase
-    .from("post_details")
-    .select("*")
-    .match({ post_id: postId })
-    .limit(1)
-    .single();
-  if (post) {
-    return post;
-  }
-}
+import { PostVotes } from "../votes/post-votes";
+import { fetchUser } from "@/lib/utils";
+import { NoUserVotes } from "../votes/no-user-votes";
 
 export default async function PostDetails({ postId }: { postId: number }) {
-  const post = await getPostDetails(postId);
+  const supabase = createServerComponentClient({ cookies });
+  const user = await fetchUser(supabase); // get user
+
+  async function getPostDetails() {
+    const { data: post } = await supabase
+      .from("post_details")
+      .select("*")
+      .match({ post_id: postId })
+      .limit(1)
+      .single();
+    if (post) {
+      return post;
+    }
+  }
+
+  const post = await getPostDetails();
 
   if (post)
     return (
@@ -57,6 +62,7 @@ export default async function PostDetails({ postId }: { postId: number }) {
                   })}
                 </span>
               </div>
+
               <div className=" flex gap-1 ">
                 <BiChevronUpCircle className="my-auto hover:cursor-pointer hover:text-green-600" />
                 <span className="my-auto text-sm">
@@ -86,6 +92,13 @@ export default async function PostDetails({ postId }: { postId: number }) {
                 className="rich-text px-3"
                 dangerouslySetInnerHTML={{ __html: post.post_content }}
               />
+            )}
+          </div>
+          <div className="px-3">
+            {user ? (
+              <PostVotes user={user} postId={postId} />
+            ) : (
+              <NoUserVotes type="post" Id={postId} />
             )}
           </div>
         </div>

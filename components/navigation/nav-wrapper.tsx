@@ -10,28 +10,23 @@ import {
 } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import LogoutButton from "../LogoutButton";
-import { buttonVariants } from "../ui/button";
+
 import { fetchUser } from "@/lib/utils";
 import { Search } from "../search/search";
+import { LogInModal } from "../auth/logIn-modal";
 
 export async function NavWrapper() {
   const supabase = createServerComponentClient({ cookies }); // get supabase
 
   const user = await fetchUser(supabase); // get user
 
-  const logBtn = user ? (
-    <LogoutButton />
-  ) : (
-    <Link href="/login" className={buttonVariants({ variant: "outline" })}>
-      Login
-    </Link>
-  );
+  const logBtn = user ? <LogoutButton /> : <LogInModal />;
 
   return (
     <div>
       <nav className="py-2 shadow-lg ">
         <div className="container mx-auto px-4 md:px-8 ">
-          <div className=" grid grid-cols-3">
+          <div className="flex justify-between md:grid md:grid-cols-3">
             {/* <!-- Primary Navbar items --> */}
             <div className="hidden items-center space-x-10 md:flex">
               <Link className="border-0 text-neutral-200" href="/">
@@ -40,20 +35,21 @@ export async function NavWrapper() {
               <Link className="border-0 text-neutral-200" href="/community/all">
                 Communities
               </Link>
-              <Link
-                className="border-0 text-neutral-200"
-                href={`/user/${user?.id}`}
-              >
-                Profile
-              </Link>
+              {user && (
+                <Link
+                  className="border-0 text-neutral-200"
+                  href={`/user/${user?.id}`}
+                >
+                  Profile
+                </Link>
+              )}
             </div>
             <div className="">
-              <div>
-                <Search />
-              </div>
+              <Search />
             </div>
 
             {/* <!-- Secondary Navbar items --> */}
+
             <div className="hidden  justify-end md:flex">{logBtn}</div>
             {/* <!-- Mobile menu button --> */}
             <div className="flex h-12 w-full  items-center justify-end  md:hidden">
@@ -117,12 +113,13 @@ export async function LoginLogout({ user }: { user: User }) {
   else if (user !== null)
     return (
       <>
-        <Link href="/login" className={buttonVariants({ variant: "outline" })}>
+        <LogInModal />
+        {/* <Link href="/login" className={buttonVariants({ variant: "outline" })}>
           Login
         </Link>
         <Link href="/login" className={buttonVariants({ variant: "outline" })}>
           Sign up
-        </Link>
+        </Link> */}
       </>
     );
 }
