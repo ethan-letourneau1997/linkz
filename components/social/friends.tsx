@@ -23,7 +23,7 @@ export async function Friends() {
   const freinds = await getFreinds();
 
   return (
-    <div className="mt-3 w-full max-w-[200px] bg-neutral-600 pt-3 text-neutral-200">
+    <div className="mt-3 w-full max-w-[200px] flex-grow bg-neutral-600 pt-3 text-neutral-200">
       <h1 className="text-center text-xl font-semibold">Freinds</h1>
       <div className="mt-1 space-y-2">
         {freinds &&
