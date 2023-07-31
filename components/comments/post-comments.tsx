@@ -12,7 +12,7 @@ export async function PostComments({ postId }: PostCommentsProps) {
 
   async function getComments() {
     const { data } = await supabase
-      .from("comment_tree")
+      .from("post_comments")
       .select("*")
       .eq("root_post", postId);
     if (data) return data;

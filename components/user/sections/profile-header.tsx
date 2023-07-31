@@ -7,7 +7,7 @@ export async function ProfileHeader({
 }) {
   return (
     <div className="-z-20 bg-neutral-800  py-10">
-      <div className="mx-auto flex max-w-[800px] items-end gap-3 px-10 md:px-5">
+      <div className="mx-auto flex max-w-[700px] items-end gap-3 px-10 md:px-5">
         <Avatar>
           <AvatarImage src="" />
           <AvatarFallback className=" bg-teal-500">CN</AvatarFallback>

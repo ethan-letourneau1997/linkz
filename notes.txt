@@ -1,0 +1,15 @@
+VIEWS USED
+
+comment_vote_count - Used
+community_sub_count - Ref
+community_details - Used
+
+post_comments - Used
+post_comments_count - Ref
+post_details - Used
+post_preview - Used
+post_preview_plus_votes - Used
+post_vote_count - Ref
+
+user_comment - Used
+user_subscriptions - Used

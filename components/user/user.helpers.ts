@@ -1,7 +1,7 @@
 import { SupabaseClient, User } from "@supabase/supabase-js";
 
 export interface fetchProfileProps {
-  user: User;
+  user: User | null;
   supabase: SupabaseClient;
 }
 

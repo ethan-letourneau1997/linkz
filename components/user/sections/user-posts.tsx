@@ -7,6 +7,7 @@ import { AspectRatio } from "../../ui/aspect-ratio";
 import { fetchUser } from "@/lib/utils";
 import { PostVotes } from "@/components/votes/post-votes";
 import { NoUserVotes } from "@/components/votes/no-user-votes";
+import { GoComment } from "react-icons/go";
 
 export async function UserPosts({ userProfile }: { userProfile: User }) {
   const supabase = createServerComponentClient({ cookies });
@@ -15,7 +16,7 @@ export async function UserPosts({ userProfile }: { userProfile: User }) {
   async function getUserPosts() {
     if (userProfile) {
       const { data: posts } = await supabase
-        .from("user_posts")
+        .from("post_preview")
         .select("*")
         .eq("posting_user_id", userProfile.id);
       if (posts) return posts;
@@ -31,7 +32,7 @@ export async function UserPosts({ userProfile }: { userProfile: User }) {
           {userPosts?.map((post) => (
             <div className="bg-neutral-50 px-4 py-3" key={post.id}>
               <div>
-                <span className="">{post.community_name}</span>
+                <span className="">{post.post_community}</span>
                 &nbsp;&#8226;&nbsp;
                 <span className="text-sm text-neutral-500">
                   {getTimeSinceNow({
@@ -42,7 +43,7 @@ export async function UserPosts({ userProfile }: { userProfile: User }) {
               <div className="mt-1 space-y-1" key={post.id}>
                 <Link
                   className="mt-4  text-base font-medium text-neutral-900 sm:text-lg"
-                  href={`/community/${post.post_title}`}
+                  href={`/community/${post.post_community}/post/${post.post_id}`}
                 >
                   {post.post_title}
                 </Link>
@@ -84,13 +85,19 @@ export async function UserPosts({ userProfile }: { userProfile: User }) {
                     />
                   )}
                 </div>
-                <div>
-                  <div className="mt-1">
+                <div className="mt-2 flex gap-4">
+                  <div>
                     {user ? (
-                      <PostVotes user={user} postId={post.post_id} />
+                      <PostVotes user={user} postId={post.post_id!} />
                     ) : (
-                      <NoUserVotes type="post" Id={post.post_id} />
+                      <NoUserVotes type="post" Id={post.post_id!} />
                     )}
+                  </div>
+                  <div className=" flex gap-1">
+                    <GoComment className=" mt-[3px]" />{" "}
+                    <span className="text-sm">
+                      {post.comment_count}&nbsp;comments
+                    </span>
                   </div>
                 </div>
               </div>

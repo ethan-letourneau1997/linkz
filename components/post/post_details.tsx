@@ -35,12 +35,12 @@ export default async function PostDetails({ postId }: { postId: number }) {
     return (
       <div>
         <div className="w-screen bg-neutral-800 py-2 pl-2 text-neutral-200">
-          <div className="mx-auto flex max-w-[800px] gap-2">
+          <div className="mx-auto flex max-w-[700px] gap-2">
             <FaChevronLeft className="my-auto" />
             <span className="font-semibold ">{post.community_name}</span>
           </div>
         </div>
-        <div className="mx-auto max-w-[800px] space-y-3 bg-neutral-50 pt-4 md:mt-3 ">
+        <div className="mx-auto max-w-[700px] space-y-3 bg-neutral-50 pt-4 md:mt-3 ">
           <div className="px-3">
             <div className="flex justify-between">
               <div className=" text-xs font-normal text-neutral-600 ">
@@ -102,7 +102,7 @@ export default async function PostDetails({ postId }: { postId: number }) {
             )}
           </div>
         </div>
-        <div className="mx-auto mt-3 max-w-[800px] bg-neutral-50">
+        <div className="mx-auto mt-3 max-w-[700px] bg-neutral-50">
           <PostComments postId={postId} />
         </div>
       </div>

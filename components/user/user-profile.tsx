@@ -21,6 +21,8 @@ export default async function UserProfile() {
 
   const username = await fetchUsername({ user: user, supabase: supabase });
 
+  console.log(username);
+
   return (
     <div className="flex w-screen  flex-col">
       <ProfileHeader username={username} />
@@ -28,7 +30,7 @@ export default async function UserProfile() {
         <Tabs
           id="Profile-tabs"
           defaultValue="posts"
-          className="mx-auto min-h-[89.5vh] max-w-[800px] md:mt-4"
+          className="mx-auto min-h-[89.5vh] max-w-[700px] md:mt-4"
         >
           <TabsList className=" sticky top-[64px] h-12 w-full p-0 md:relative md:top-0">
             <TabsTrigger className="h-full w-1/4 sm:text-base" value="posts">
@@ -47,19 +49,19 @@ export default async function UserProfile() {
               Info
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="posts" className="mx-auto mb-3 max-w-[800px] ">
+          <TabsContent value="posts" className="mx-auto mb-3 max-w-[700px] ">
             <UserPosts userProfile={user} />
           </TabsContent>
           <TabsContent
             value="communities"
-            className="mx-auto mb-3 max-w-[800px]"
+            className="mx-auto mb-3 max-w-[700px]"
           >
             <UserSubscriptions user={user} />
           </TabsContent>
-          <TabsContent value="admin" className="mx-auto mb-3 max-w-[800px] ">
+          <TabsContent value="admin" className="mx-auto mb-3 max-w-[700px] ">
             <UserCreatedCommunities user={user} />
           </TabsContent>
-          <TabsContent value="info" className="mx-auto mb-3 max-w-[800px] ">
+          <TabsContent value="info" className="mx-auto mb-3 max-w-[700px] ">
             <UserDetails user={user} username={username} />
           </TabsContent>
         </Tabs>

@@ -2,7 +2,7 @@ import "./globals.css";
 
 import { IBM_Plex_Sans } from "next/font/google";
 
-import { NavWrapper } from "@/components/navigation/nav-wrapper";
+import { NavHeader } from "@/components/navigation/nav-header";
 
 import { Suspense } from "react";
 
@@ -24,8 +24,9 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${plex.className}`}>
       <body className="min-h-screen bg-neutral-300 dark:bg-neutral-950 ">
-        <div className="view sticky top-0 z-50 w-screen ">
-          <NavWrapper />
+        <div className="view sticky top-0 z-50 w-screen">
+          {/* <NavigationMenuDemo /> */}
+          <NavHeader />
         </div>
 
         <main className="mb-3 flex flex-col items-center">

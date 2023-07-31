@@ -16,7 +16,7 @@ export function Search() {
   useEffect(() => {
     const getResults = async () => {
       const { data, error } = await supabase
-        .from("community_sub_count")
+        .from("community_details")
         .select()
         .ilike("community_name", `%${searchQuery}%`)
         .limit(5);

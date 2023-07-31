@@ -18,7 +18,7 @@ export async function UserComments({
 
     if (commentingUser) {
       const { data } = await supabase
-        .from("user_profile_comment")
+        .from("user_comment")
         .select("*")
         .eq("commenting_user_id", commentingUser.id);
 

@@ -1,4 +1,4 @@
-import { PublicProfile } from "@/components/user/profile/public-profile";
+import { UserProfile } from "@/components/user/profile/user-profile";
 
 export interface UsernameIndexProps {
   params: {
@@ -9,5 +9,5 @@ export interface UsernameIndexProps {
 export default async function Index(context: UsernameIndexProps) {
   const { username } = context.params; // Extract the communityName from params
 
-  return <PublicProfile username={username} />;
+  return <UserProfile username={username} />;
 }
