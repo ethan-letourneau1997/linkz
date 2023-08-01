@@ -1277,6 +1277,16 @@ export interface Database {
         }
         Relationships: []
       }
+      user_friends_conversation: {
+        Row: {
+          conversation_id: number | null
+          friend_id: string | null
+          friend_username: string | null
+          relationship: string | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
       user_subscriptions: {
         Row: {
           community_description: string | null

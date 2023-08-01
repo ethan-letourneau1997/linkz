@@ -6,7 +6,7 @@ export interface CommunityIndexProps {
   };
 }
 
-export default function Index(context: CommunityIndexProps) {
+export default async function Index(context: CommunityIndexProps) {
   const { communityName } = context.params; // Extract the communityName from params
 
   return <Community communityName={communityName} />;
