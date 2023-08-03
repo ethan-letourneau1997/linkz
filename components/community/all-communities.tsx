@@ -13,7 +13,7 @@ export default async function AllCommunities() {
   const { data: communities } = await supabase.from("community").select("*");
 
   return (
-    <div className="max-w-[700px] ">
+    <div className="max-w-2xl ">
       <h1 className=" py-6 text-center text-3xl font-bold">All Communities</h1>
 
       <div className="space-y-2">

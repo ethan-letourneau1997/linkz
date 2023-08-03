@@ -6,7 +6,7 @@ export async function HomepageLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className=" max-w-[700px]">
+    <div className=" max-w-2xl">
       <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
     </div>
   );

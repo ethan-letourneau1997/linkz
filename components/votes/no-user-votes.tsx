@@ -26,7 +26,6 @@ export async function NoUserVotes({ Id, type }: { Id: number; type: string }) {
         .limit(1)
         .single();
       if (data) {
-        console.log(data);
         return data.total_votes;
       }
       if (error) {

@@ -32,12 +32,12 @@ export async function UserProfile({ username }: { username: string }) {
   if (userProfile)
     return (
       <div className="flex w-screen  flex-col">
-        <ProfileHeader username={username} />
+        <ProfileHeader userProfile={userProfile} />
         <div className=" md:min-h-fit">
           <Tabs
             id="Profile-tabs"
             defaultValue="posts"
-            className="mx-auto min-h-[89.5vh] w-full max-w-[700px] md:mt-4"
+            className="mx-auto min-h-[89.5vh] w-full max-w-2xl md:mt-4"
           >
             <TabsList className=" sticky top-[64px] z-40 h-12 w-full p-0 md:relative md:top-0">
               <TabsTrigger
@@ -52,7 +52,7 @@ export async function UserProfile({ username }: { username: string }) {
               >
                 Comments
               </TabsTrigger>
-              {user && (
+              {user && userProfile.id === user.id && (
                 <>
                   <TabsTrigger
                     className={`h-full w-1/${tabCount} sm:text-base`}
@@ -69,27 +69,21 @@ export async function UserProfile({ username }: { username: string }) {
                 </>
               )}
             </TabsList>
-            <TabsContent value="posts" className="mx-auto mb-3 max-w-[700px] ">
+            <TabsContent value="posts" className="mx-auto mb-3 max-w-2xl ">
               {/* <SortPosts userProfile={userProfile} /> */}
               <UserPosts userProfile={userProfile} />
             </TabsContent>
-            <TabsContent
-              value="comments"
-              className="mx-auto mb-3 max-w-[700px] "
-            >
+            <TabsContent value="comments" className="mx-auto mb-3 max-w-2xl ">
               <UserComments commentingUser={userProfile} />
             </TabsContent>
-            {user && (
+            {user && userProfile.id === user.id && (
               <>
-                <TabsContent
-                  value="admin"
-                  className="mx-auto mb-3 max-w-[700px] "
-                >
+                <TabsContent value="admin" className="mx-auto mb-3 max-w-2xl ">
                   <UserCreatedCommunities user={user} />
                 </TabsContent>
                 <TabsContent
                   value="info"
-                  className="mx-auto mb-3 w-full max-w-[700px] "
+                  className="mx-auto mb-3 w-full max-w-2xl "
                 >
                   <UserDetails user={user} username={username} />
                 </TabsContent>

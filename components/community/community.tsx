@@ -48,7 +48,7 @@ export default async function Community({ communityName }: CommunityProps) {
       <div className="w-screen bg-neutral-800 px-3 py-4">
         <Suspense fallback={<div>loading</div>}>
           <span className=" text-neutral-200">
-            <div className="mx-auto mb-4 max-w-[700px] px-3 ">
+            <div className="mx-auto mb-4 max-w-2xl px-3 ">
               <div className="flex justify-between ">
                 <h1 className="text-3xl font-semibold">
                   {community.community_name}
@@ -64,7 +64,7 @@ export default async function Community({ communityName }: CommunityProps) {
           </span>
         </Suspense>
       </div>
-      <div className="mx-auto max-w-[700px] md:pt-4">
+      <div className="mx-auto max-w-2xl md:pt-4">
         <Input placeholder="new post" />
         <div className="  mt-3 space-y-3 shadow-sm">
           <Suspense fallback={<div>loading</div>}>

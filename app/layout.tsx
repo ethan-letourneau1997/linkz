@@ -23,13 +23,13 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en" className={`${plex.className}`}>
-      <body className="min-h-screen bg-neutral-300 dark:bg-neutral-950 ">
+      <body className="min-h-screen overscroll-auto bg-neutral-300 dark:bg-neutral-950">
         <div className="view sticky top-0 z-50 w-screen">
           {/* <NavigationMenuDemo /> */}
           <NavHeader />
         </div>
 
-        <main className="mb-3 flex flex-col items-center">
+        <main className="mb-3 flex flex-col items-center ">
           <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
         </main>
       </body>

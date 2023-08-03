@@ -4,6 +4,7 @@ import { Database } from "@/types/supabase";
 import Link from "next/link";
 
 import { usePathname } from "next/navigation";
+import { FaUserFriends } from "react-icons/fa";
 
 export const revalidate = 60;
 
@@ -25,24 +26,27 @@ export async function FriendsList({ friends }: FriendsListProps) {
   const currentFriend = getSubstringAfterThirdSlash(pathname);
 
   return (
-    <div className="bg-neutral-400 text-center">
-      <div className=" px-3 text-2xl">Friends</div>
-
+    <aside
+      id="default-sidebar"
+      className="fixed left-0 top-0 z-40 h-screen w-64 -translate-x-full bg-neutral-800 pt-20 text-center text-neutral-200 transition-transform sm:translate-x-0"
+      aria-label="Sidebar"
+    >
+      <div className="flex justify-center gap-2 text-2xl">
+        <FaUserFriends className="my-auto" />
+        <div>Friends</div>
+      </div>
       {friends &&
         friends.map((friend) => (
-          <div
-            className={`px-3 ${
+          <Link
+            key={friend.friend_id}
+            className={`block px-3 py-2 text-lg hover:bg-neutral-700 ${
               currentFriend === friend.friend_username ? "bg-neutral-600" : ""
             }`}
-            key={friend.friend_id}
+            href={`/social/friend/${friend.friend_username}`}
           >
-            <Link href={`/social/friend/${friend.friend_username}`}>
-              {friend.friend_username}
-            </Link>
-          </div>
+            {friend.friend_username}
+          </Link>
         ))}
-    </div>
+    </aside>
   );
-
-  return <div>Loading...</div>;
 }

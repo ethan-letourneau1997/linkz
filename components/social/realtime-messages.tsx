@@ -21,7 +21,7 @@ export default function RealtimeMessages({
   const supabase = createClientComponentClient();
   const router = useRouter();
 
-  const { scrollIntoView, targetRef, scrollableRef } = useScrollIntoView<
+  const { scrollIntoView, targetRef } = useScrollIntoView<
     HTMLDivElement,
     HTMLDivElement
   >();
@@ -51,7 +51,7 @@ export default function RealtimeMessages({
     scrollIntoView();
   }, [serverMessages]);
 
-  const [displayCount, setDisplayCount] = useState(20);
+  const [displayCount, setDisplayCount] = useState(10);
 
   const handleLoadMore = () => {
     setDisplayCount((prevCount) => prevCount + 10);
@@ -62,19 +62,18 @@ export default function RealtimeMessages({
   );
 
   return (
-    <div
-      className="h-[80vh] space-y-2 overflow-y-auto px-3"
-      ref={scrollableRef}
-    >
-      <div className=" mt-3 flex justify-center">
-        <Button
-          className=" bg-neutral-800 p-1"
-          size="medium"
-          onClick={handleLoadMore}
-        >
-          Load More
-        </Button>
-      </div>
+    <div className=" space-y-2 px-3">
+      {serverMessages.length > displayCount && (
+        <div className=" mt-3 flex justify-center">
+          <Button
+            className=" bg-neutral-800 p-1"
+            size="medium"
+            onClick={handleLoadMore}
+          >
+            Load More
+          </Button>
+        </div>
+      )}
       {displayedConversation.map((message, index) => {
         // Check if the previous message was sent by the same user
         const isPreviousMessageSameUser =
@@ -85,20 +84,20 @@ export default function RealtimeMessages({
         return (
           <div key={message.message_id}>
             {message.message_sender === user.id ? (
-              <div className="ml-auto max-w-[300px]">
+              <div className="ml-auto max-w-[350px]">
                 {!isPreviousMessageSameUser && (
                   <div className="text-sm">{message.sender_username}</div>
                 )}
-                <div className=" rounded-sm bg-green-400 px-2 py-1">
+                <div className=" rounded-md bg-green-400 px-3 py-2">
                   <div>{message.message_content}</div>
                 </div>
               </div>
             ) : (
-              <div className="max-w-[300px] ">
+              <div className="max-w-[350px] ">
                 {!isPreviousMessageSameUser && (
                   <div className="text-sm">{message.sender_username}</div>
                 )}
-                <div className="rounded-sm bg-blue-400 px-2 py-1">
+                <div className="rounded-md bg-blue-400 px-3 py-2">
                   <div>{message.message_content}</div>
                 </div>
               </div>

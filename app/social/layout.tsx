@@ -1,5 +1,5 @@
 import { fetchUser } from "@/lib/utils";
-import { FriendsList } from "./friends-list";
+import { FriendsList } from "../../components/social/friends-list";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
@@ -24,9 +24,8 @@ export default async function Layout({
   const friends = await getFriends();
 
   return (
-    <div className=" flex w-full max-w-3xl pt-5">
+    <div className="w-full bg-neutral-50 pb-14">
       {friends && <FriendsList friends={friends} />}
-
       {children}
     </div>
   );

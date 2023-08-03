@@ -7,7 +7,7 @@ export default async function HomepageLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="w-full max-w-[700px] space-y-3 pt-3">
+    <div className="w-full max-w-2xl space-y-3 pt-3">
       <PostSelect />
       <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
     </div>
